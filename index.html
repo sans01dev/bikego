@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>자전거갈까 v0.1</title>
+<style>
+  :root{
+    --bg:#F2F8F5; --card:#FFFFFF; --line:#DFF0E8;
+    --ink:#1A2B22; --sub:#6B7C72;
+    --accent:#10B981; --dark:#0A8F64;
+    --ok:#10B981; --mid:#2563EB; --low:#F59E0B; --none:#9AA5AD;
+    --red:#D32F2F; --red-bg:#FDECEC; --green-bg:#E7F7F0;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:'Apple SD Gothic Neo','Pretendard',-apple-system,'Malgun Gothic',sans-serif;
+    -webkit-user-select:none;user-select:none;}
+  body{padding:16px 14px 48px;max-width:480px;margin:0 auto;}
+
+  .demo-bar{background:#FFF4E5;border:1px solid #F4D6A8;color:#92600A;
+    font-size:13px;font-weight:700;padding:9px 12px;border-radius:11px;margin-bottom:14px;}
+
+  header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+  .logo{display:flex;align-items:center;gap:8px;}
+  .logo-icon{width:36px;height:36px;background:var(--accent);border-radius:10px;
+    display:flex;align-items:center;justify-content:center;}
+  .logo-icon svg{width:22px;height:22px;}
+  h1{font-size:21px;font-weight:800;letter-spacing:-0.5px;margin:0;}
+  .now{font-size:13px;font-weight:700;color:var(--sub);}
+
+  .loc-chip{display:flex;align-items:center;gap:8px;background:var(--card);
+    border:1px solid var(--line);border-radius:12px;padding:11px 14px;margin-bottom:12px;}
+  .loc-dot{width:9px;height:9px;border-radius:50%;background:var(--accent);flex-shrink:0;}
+  .loc-name{font-size:15px;font-weight:800;flex:1;}
+  .loc-sub{font-size:13px;font-weight:700;color:var(--sub);}
+
+  .stats{display:flex;background:var(--card);border:1px solid var(--line);
+    border-radius:13px;overflow:hidden;margin-bottom:14px;}
+  .stat{flex:1;padding:12px 8px;text-align:center;border-right:1px solid var(--line);}
+  .stat:last-child{border-right:none;}
+  .sl{font-size:12px;font-weight:700;color:var(--sub);}
+  .sv{font-size:18px;font-weight:800;margin-top:2px;letter-spacing:-0.3px;}
+
+  .hero{background:var(--card);border:2px solid var(--line);border-radius:18px;
+    padding:18px;margin-bottom:12px;transition:border-color .3s;}
+  .htag{font-size:13px;font-weight:700;color:var(--sub);margin-bottom:4px;}
+  .hname{font-size:19px;font-weight:800;letter-spacing:-0.4px;margin-bottom:14px;line-height:1.35;}
+  .hrow{display:flex;align-items:flex-end;justify-content:space-between;}
+  .hbig{display:flex;align-items:flex-end;gap:6px;}
+  .hnum{font-size:52px;font-weight:800;line-height:1;letter-spacing:-2px;}
+  .hunit{font-size:16px;font-weight:800;color:var(--sub);margin-bottom:7px;}
+  .hreturn{text-align:right;}
+  .hrlabel{font-size:12px;font-weight:700;color:var(--sub);margin-bottom:4px;}
+  .hrnum{font-size:28px;font-weight:800;line-height:1;}
+  .hrunit{font-size:13px;font-weight:700;}
+  .hdist{font-size:14px;font-weight:700;color:var(--sub);margin-top:12px;}
+
+  .sec{font-size:14px;font-weight:800;color:var(--sub);margin:16px 4px 9px;}
+
+  .row{display:flex;align-items:center;gap:10px;background:var(--card);
+    border:1px solid var(--line);border-radius:14px;padding:13px 14px;margin-bottom:8px;}
+  .rinfo{flex:1;min-width:0;}
+  .rn{font-size:15px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .rd{font-size:13px;font-weight:700;color:var(--sub);margin-top:2px;}
+  .rright{text-align:right;flex-shrink:0;}
+  .rcnt{font-size:22px;font-weight:800;line-height:1.1;}
+  .rcu{font-size:12px;font-weight:700;}
+  .rrack{font-size:12px;font-weight:700;margin-top:1px;}
+
+  #map{height:220px;border-radius:18px;border:1px solid var(--line);
+    background:var(--card);position:relative;overflow:hidden;}
+  #mapSvg{position:absolute;inset:0;width:100%;height:100%;}
+
+  .btn{width:100%;padding:14px;border:none;border-radius:14px;
+    background:var(--accent);color:#fff;font-size:16px;font-weight:800;
+    margin-top:16px;letter-spacing:-0.3px;cursor:pointer;}
+  .btn:active{background:var(--dark);}
+
+  footer{text-align:center;font-size:12px;font-weight:700;color:#9AA5AD;margin-top:24px;}
+</style>
+</head>
+<body>
+
+<div class="demo-bar" id="demoBanner">데모 모드 · 실제 데이터 아님</div>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round">
+        <circle cx="5.5" cy="17.5" r="3.5"/>
+        <circle cx="18.5" cy="17.5" r="3.5"/>
+        <path d="M15 6a1 1 0 1 0 2 0 1 1 0 0 0-2 0"/>
+        <path d="M12 17.5V14l-3-3 4-3 2 3h2"/>
+      </svg>
+    </div>
+    <h1>자전거갈까</h1>
+  </div>
+  <span class="now" id="now"></span>
+</header>
+
+<div class="loc-chip">
+  <span class="loc-dot"></span>
+  <span class="loc-name" id="locName">위치 확인 중…</span>
+  <span class="loc-sub">따릉이</span>
+</div>
+
+<div class="stats">
+  <div class="stat"><div class="sl">근처 대여 가능</div><div class="sv" id="stAvail">—</div></div>
+  <div class="stat"><div class="sl">대여소</div><div class="sv" id="stCount">—</div></div>
+  <div class="stat"><div class="sl">업데이트</div><div class="sv" id="stTime">—</div></div>
+</div>
+
+<div class="hero" id="hero">
+  <div class="htag">가장 가까운 대여소</div>
+  <div class="hname" id="hName">—</div>
+  <div class="hrow">
+    <div class="hbig">
+      <span class="hnum" id="hNum">—</span>
+      <span class="hunit">대<br>대여</span>
+    </div>
+    <div class="hreturn" id="hReturn"></div>
+  </div>
+  <div class="hdist" id="hDist"></div>
+</div>
+
+<div class="sec">근처 대여소</div>
+<div id="list"></div>
+
+<div class="sec">지도</div>
+<div id="map"><svg id="mapSvg"></svg></div>
+
+<button class="btn" id="locBtn">위치 다시 불러오기</button>
+<footer>자료: 서울 열린데이터광장 · © sans · v0.1</footer>
+
+<script>
+/* ===== 설정 — API 연결 시 여기만 수정 ===== */
+const CFG = {
+  USE_REAL_API: false,
+  API_URL: "https://여기에_프록시_주소/api/bike",  // 프록시 확정 후 입력
+  DEFAULT: { lat: 37.4979, lng: 127.0276 },         // 서울 강남역 기본
+  NEAR: 7,
+  BUSY: 3,
+};
+
+/* ===== 유틸 ===== */
+function hav(aLa, aLo, bLa, bLo) {
+  const R = 6371, t = Math.PI / 180;
+  const dLa = (bLa-aLa)*t, dLo = (bLo-aLo)*t;
+  const x = Math.sin(dLa/2)**2 + Math.cos(aLa*t)*Math.cos(bLa*t)*Math.sin(dLo/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(x), Math.sqrt(1-x));
+}
+const fmKm = km => km < 1 ? Math.round(km*1000)+"m" : km.toFixed(1)+"km";
+const cntCol = n => n===0?"var(--none)":n>=7?"var(--ok)":n>=4?"var(--mid)":"var(--low)";
+
+/* ===== 데이터 ===== */
+async function fetchStations() {
+  if (CFG.USE_REAL_API) {
+    const r = await fetch(CFG.API_URL);
+    if (!r.ok) throw new Error("API 오류 " + r.status);
+    return await r.json();
+  }
+  return mockStations();
+}
+
+function mockStations() {
+  const names = [
+    "강남역 1번 출구","강남역 11번 출구","논현역 6번 출구","역삼역 1번 출구",
+    "강남구청역 3번 출구","선릉역 3번 출구","삼성역 4번 출구","도곡역 1번 출구",
+    "교보타워 앞","GS강남타워 앞","강남YMCA 앞","강남세브란스병원",
+  ];
+  const base = CFG.DEFAULT;
+  const tick = Math.floor(Date.now()/60000);
+  return names.map((name, i) => {
+    const h = (i*1337 + tick*7) % 9973;
+    const racks     = 15 + (h%16);
+    const available = Math.min(h%25, racks);
+    const emptyRacks = Math.max(racks-available, 0);
+    return {
+      name,
+      lat: base.lat + (((h%200)-100)/100)*0.015,
+      lng: base.lng + ((((h*7)%200)-100)/100)*0.018,
+      available, racks, emptyRacks,
+      returnBusy: emptyRacks <= CFG.BUSY,
+    };
+  });
+}
+
+/* ===== 렌더 ===== */
+let MY = { ...CFG.DEFAULT };
+
+async function render() {
+  document.getElementById("now").textContent =
+    new Date().toLocaleTimeString("ko-KR",{hour:"2-digit",minute:"2-digit"});
+
+  let stations;
+  try {
+    const all = await fetchStations();
+    stations = all
+      .filter(s => s.lat && s.lng)
+      .map(s => ({...s, km: hav(MY.lat, MY.lng, s.lat, s.lng)}))
+      .sort((a,b) => a.km-b.km)
+      .slice(0, CFG.NEAR);
+  } catch(e) {
+    document.getElementById("list").innerHTML =
+      `<div style="text-align:center;color:var(--sub);padding:24px;font-size:14px;font-weight:700">
+        데이터를 불러오지 못했습니다</div>`;
+    return;
+  }
+
+  document.getElementById("locName").textContent =
+    CFG.USE_REAL_API ? "현재 위치 기준" : "서울 강남 (데모)";
+
+  const totalAvail = stations.reduce((a,s)=>a+s.available,0);
+  document.getElementById("stAvail").textContent = totalAvail+"대";
+  document.getElementById("stCount").textContent = stations.length+"곳";
+  document.getElementById("stTime").textContent  =
+    new Date().toLocaleTimeString("ko-KR",{hour:"2-digit",minute:"2-digit"});
+
+  const top = stations[0];
+  const col = cntCol(top.available);
+  document.getElementById("hName").textContent  = top.name;
+  document.getElementById("hNum").textContent   = top.available;
+  document.getElementById("hNum").style.color   = col;
+  document.getElementById("hero").style.borderColor = col;
+  document.getElementById("hDist").textContent  = "📍 "+fmKm(top.km)+" · 거치대 "+top.racks+"대";
+  document.getElementById("hReturn").innerHTML  =
+    `<div class="hrlabel">${top.returnBusy?"반납 혼잡":"반납 여유"}</div>
+     <div class="hrnum" style="color:${top.returnBusy?"var(--red)":"var(--dark)"}">
+       ${top.emptyRacks}<span class="hrunit">칸</span></div>`;
+
+  const list = document.getElementById("list");
+  list.innerHTML = "";
+  stations.slice(1).forEach(s => {
+    list.innerHTML +=
+      `<div class="row">
+        <div class="rinfo">
+          <div class="rn">${s.name}</div>
+          <div class="rd">${fmKm(s.km)}</div>
+        </div>
+        <div class="rright">
+          <div class="rcnt" style="color:${cntCol(s.available)}">${s.available}<span class="rcu"> 대</span></div>
+          <div class="rrack" style="color:${s.returnBusy?"var(--red)":"var(--dark)"}">반납 ${s.emptyRacks}칸</div>
+        </div>
+      </div>`;
+  });
+
+  drawMap(stations);
+}
+
+function drawMap(stations) {
+  const svg  = document.getElementById("mapSvg");
+  const pts  = [...stations, {lat:MY.lat,lng:MY.lng}];
+  const lats = pts.map(p=>p.lat), lngs = pts.map(p=>p.lng);
+  const mnLa=Math.min(...lats), mxLa=Math.max(...lats);
+  const mnLo=Math.min(...lngs), mxLo=Math.max(...lngs);
+  const X = lo => 28+((lo-mnLo)/((mxLo-mnLo)||0.001))*344;
+  const Y = la => 22+((mxLa-la)/((mxLa-mnLa)||0.001))*176;
+  const cs = getComputedStyle(document.documentElement);
+  const col = v => cs.getPropertyValue(v.replace("var(","").replace(")","")).trim();
+  let s="";
+  stations.forEach(st => {
+    const c = col(cntCol(st.available)) || "#9AA5AD";
+    s += `<circle cx="${X(st.lng)}" cy="${Y(st.lat)}" r="12" fill="${c}" opacity=".9"/>`;
+    s += `<text x="${X(st.lng)}" y="${Y(st.lat)+4}" text-anchor="middle"
+            font-size="11" font-weight="800" fill="#fff">${st.available}</text>`;
+  });
+  s += `<circle cx="${X(MY.lng)}" cy="${Y(MY.lat)}" r="8"
+          fill="#0A8F64" stroke="#fff" stroke-width="3"/>`;
+  s += `<text x="${X(MY.lng)+13}" y="${Y(MY.lat)+4}"
+          font-size="11" font-weight="800" fill="#0A8F64">나</text>`;
+  svg.innerHTML = s;
+}
+
+/* ===== 위치 ===== */
+function locate() {
+  document.getElementById("locName").textContent = "위치 확인 중…";
+  if (!navigator.geolocation) { render(); return; }
+  navigator.geolocation.getCurrentPosition(
+    p => { MY={lat:p.coords.latitude,lng:p.coords.longitude}; render(); },
+    ()  => { MY={...CFG.DEFAULT}; render(); },
+    {enableHighAccuracy:true,timeout:7000}
+  );
+}
+
+document.getElementById("locBtn").addEventListener("click", locate);
+if (CFG.USE_REAL_API) document.getElementById("demoBanner").style.display="none";
+locate();
+</script>
+</body>
+</html>
