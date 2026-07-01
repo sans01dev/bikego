@@ -2,361 +2,289 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>요즘여기 v0.2</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>거제 10번 버스 도착 테스트 v0.1</title>
 <style>
-  :root{
-    --paper:#EFEDE6;--ink:#1B1A24;--ink-soft:#6A6776;--line:#1B1A24;
-    --hot:#FF5A1F;--food:#FF3D7F;--fashion:#6C4DFF;
-    --card:#FBFAF6;--c:var(--hot);
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    margin: 0; padding: 0;
+    font-family: -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+    background: #0F172A; color: #E2E8F0;
+    font-size: 15px; line-height: 1.5;
   }
-  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-  html,body{margin:0;padding:0;}
-  body{background:var(--paper);color:var(--ink);font-family:'IBM Plex Sans KR',sans-serif;
-    -webkit-font-smoothing:antialiased;overscroll-behavior:none;line-height:1.5;position:relative;}
-  body::after{content:"";position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:.045;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
-  .wrap{max-width:520px;margin:0 auto;min-height:100vh;}
+  .wrap { max-width: 560px; margin: 0 auto; padding: 16px 16px 60px; }
+  h1 { font-size: 19px; font-weight: 800; margin: 8px 0 4px; color: #F8FAFC; }
+  .sub { font-size: 13px; color: #94A3B8; margin: 0 0 16px; }
 
-  header{padding:22px 20px 14px;border-bottom:2.5px solid var(--line);}
-  .vol{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.12em;
-    display:flex;justify-content:space-between;text-transform:uppercase;}
-  .vol b{font-weight:700;}
-  .title{font-family:'Black Han Sans',sans-serif;font-size:56px;line-height:.92;margin:10px 0 4px;letter-spacing:-.01em;}
-  .title em{font-style:normal;color:var(--c);transition:color .25s;}
-  .tag{font-size:12.5px;color:var(--ink-soft);font-weight:500;}
+  .card {
+    background: #1E293B; border: 1px solid #334155;
+    border-radius: 14px; padding: 14px; margin-bottom: 12px;
+  }
+  .card h2 { font-size: 14px; font-weight: 700; margin: 0 0 10px; color: #CBD5E1; }
 
-  /* 위치 바 */
-  .locbar{display:flex;align-items:center;gap:7px;margin-top:12px;padding:9px 12px;
-    border:2px solid var(--line);background:var(--card);font-size:13px;font-weight:600;}
-  .locbar .pin{width:9px;height:9px;border-radius:50%;background:var(--c);flex:none;}
-  .locbar .dong{font-weight:700;}
-  .locbar .re{margin-left:auto;font-family:'Space Mono';font-size:10.5px;color:var(--ink-soft);
-    border:1px solid var(--line);background:transparent;padding:4px 8px;cursor:pointer;}
+  label { display: block; font-size: 12px; font-weight: 600; color: #94A3B8; margin: 8px 0 4px; }
+  input, select {
+    width: 100%; padding: 10px 12px; font-size: 15px;
+    background: #0F172A; color: #E2E8F0;
+    border: 1px solid #475569; border-radius: 10px; outline: none;
+  }
+  input:focus, select:focus { border-color: #38BDF8; }
+  .row { display: flex; gap: 8px; }
+  .row > div { flex: 1; }
 
-  nav{display:flex;padding:14px 20px 0;}
-  .cat{flex:1;border:2.5px solid var(--line);border-right:none;background:transparent;
-    font-weight:700;font-size:15px;color:var(--ink);padding:11px 0;cursor:pointer;position:relative;transition:.18s;}
-  .cat:last-child{border-right:2.5px solid var(--line);}
-  .cat .em{font-size:10px;font-family:'Space Mono';display:block;opacity:.55;letter-spacing:.08em;}
-  .cat[data-on="1"]{color:#fff;}
-  .cat[data-on="1"]::before{content:"";position:absolute;inset:0;z-index:-1;mix-blend-mode:multiply;}
-  .cat[data-k="hot"][data-on="1"]::before{background:var(--hot);}
-  .cat[data-k="food"][data-on="1"]::before{background:var(--food);}
-  .cat[data-k="fashion"][data-on="1"]::before{background:var(--fashion);}
-  .cat[data-on="1"] .em{opacity:.85;}
+  button {
+    width: 100%; padding: 12px; font-size: 15px; font-weight: 700;
+    background: #38BDF8; color: #0F172A;
+    border: none; border-radius: 10px; margin-top: 10px; cursor: pointer;
+  }
+  button:active { opacity: .85; }
+  button.ghost { background: #334155; color: #E2E8F0; }
+  button:disabled { opacity: .4; }
 
-  .pick{margin:16px 20px 0;border:2.5px solid var(--line);background:var(--card);}
-  .pick-hd{display:flex;align-items:center;gap:8px;padding:12px 14px;border-bottom:2px solid var(--line);}
-  .pick-hd .ai{font-family:'Space Mono';font-size:10px;font-weight:700;letter-spacing:.1em;background:var(--ink);color:var(--paper);padding:3px 7px;}
-  .pick-hd h3{margin:0;font-size:15px;font-weight:700;}
-  .pick-bd{padding:13px 14px;}
-  .lab{font-family:'Space Mono';font-size:10px;letter-spacing:.1em;color:var(--ink-soft);margin:0 0 7px;text-transform:uppercase;}
-  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:13px;}
-  .chip{border:1.5px solid var(--line);background:transparent;border-radius:999px;padding:6px 12px;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--ink);transition:.15s;}
-  .chip[data-on="1"]{background:var(--c);color:#fff;border-color:var(--c);}
-  .go{width:100%;border:none;background:var(--ink);color:var(--paper);font-family:'Black Han Sans';font-size:17px;padding:13px;cursor:pointer;letter-spacing:.02em;}
-  .go:active{transform:translateY(1px);} .go:disabled{opacity:.45;}
-  .result{margin-top:13px;border-top:2px dashed var(--line);padding-top:13px;display:none;}
-  .result.on{display:block;animation:pop .3s ease;}
-  @keyframes pop{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
-  .result .hl{font-family:'Black Han Sans';font-size:21px;line-height:1.15;margin:0 0 6px;color:var(--c);}
-  .result .bl{font-size:13.5px;margin:0 0 9px;}
-  .result .rtags{display:flex;flex-wrap:wrap;gap:5px;}
-  .rtag{font-family:'Space Mono';font-size:10.5px;border:1px solid var(--line);padding:3px 7px;}
-  .spin{font-family:'Space Mono';font-size:12px;color:var(--ink-soft);}
+  .status { font-size: 13px; padding: 8px 10px; border-radius: 8px; margin-top: 8px; }
+  .status.ok { background: #052E16; color: #86EFAC; border: 1px solid #166534; }
+  .status.err { background: #3F1D1D; color: #FCA5A5; border: 1px solid #7F1D1D; }
+  .status.wait { background: #1E293B; color: #FCD34D; border: 1px solid #78350F; }
 
-  .feed-hd{display:flex;align-items:baseline;justify-content:space-between;padding:24px 20px 6px;}
-  .feed-hd h2{font-family:'Black Han Sans';font-size:22px;margin:0;}
-  .feed-hd .sort{font-family:'Space Mono';font-size:11px;color:var(--ink-soft);}
-  .note{padding:0 20px 6px;font-size:11.5px;color:var(--ink-soft);}
-  .feed{padding:4px 20px 30px;}
+  .stop {
+    padding: 10px 12px; border: 1px solid #334155; border-radius: 10px;
+    margin-top: 8px; cursor: pointer; background: #0F172A;
+  }
+  .stop:active { background: #1E293B; }
+  .stop .nm { font-weight: 700; font-size: 15px; color: #F1F5F9; }
+  .stop .meta { font-size: 12px; color: #94A3B8; margin-top: 2px; }
 
-  .item{display:flex;gap:13px;padding:16px 0;border-bottom:1.5px solid rgba(27,26,36,.14);
-    transition:transform .35s cubic-bezier(.2,.8,.2,1);}
-  .item:last-child{border-bottom:none;}
-  .rank{font-family:'Black Han Sans';font-size:34px;line-height:.85;color:var(--c);min-width:40px;transition:color .25s;}
-  .rank small{display:block;font-family:'Space Mono';font-size:8px;color:var(--ink-soft);letter-spacing:.08em;margin-top:3px;}
-  .body{flex:1;min-width:0;}
-  .nm{font-size:16.5px;font-weight:700;margin:0 0 2px;}
-  .meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:5px;}
-  .area{font-family:'Space Mono';font-size:10.5px;color:var(--ink-soft);letter-spacing:.04em;}
-  .dist{font-family:'Space Mono';font-size:10.5px;color:var(--c);font-weight:700;}
-  .vibe{font-size:13.5px;margin:0 0 8px;}
-  .tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px;}
-  .t{font-family:'Space Mono';font-size:10px;color:var(--ink-soft);} .t::before{content:"#";opacity:.5;}
+  .arr {
+    padding: 12px; border-radius: 10px; margin-top: 8px;
+    border: 1px solid #334155; background: #0F172A;
+  }
+  .arr.hit { border-color: #38BDF8; background: #082F49; }
+  .arr .route { font-size: 18px; font-weight: 800; color: #F8FAFC; }
+  .arr .route .tag { font-size: 11px; font-weight: 700; color: #0F172A; background: #38BDF8; padding: 2px 6px; border-radius: 6px; margin-left: 6px; vertical-align: middle; }
+  .arr .time { font-size: 15px; font-weight: 700; color: #7DD3FC; margin-top: 4px; }
+  .arr .time.none { color: #FCA5A5; }
+  .arr .cnt { font-size: 12px; color: #94A3B8; margin-top: 2px; }
 
-  /* 추천 = 순위 동력 */
-  .recrow{display:flex;align-items:center;gap:10px;}
-  .recbtn{display:flex;align-items:center;gap:6px;border:2px solid var(--line);background:var(--card);
-    padding:6px 13px;cursor:pointer;font-weight:700;font-size:13px;color:var(--ink);transition:.15s;}
-  .recbtn .h{font-size:14px;line-height:1;}
-  .recbtn[data-on="1"]{background:var(--c);color:#fff;border-color:var(--c);}
-  .recnum{font-family:'Space Mono';font-size:12px;color:var(--ink-soft);}
-  .recnum b{color:var(--ink);font-weight:700;}
-  .save{border:none;background:none;cursor:pointer;font-size:19px;line-height:1;color:var(--ink-soft);margin-left:auto;}
-  .save[data-on="1"]{color:var(--c);}
-
-  .sharebar{position:sticky;bottom:0;background:var(--paper);border-top:2.5px solid var(--line);
-    display:flex;gap:10px;padding:12px 20px;max-width:520px;margin:0 auto;}
-  .sharebar button{flex:1;border:2.5px solid var(--line);background:var(--card);font-weight:700;font-size:14px;padding:12px;cursor:pointer;color:var(--ink);}
-  .sharebar .pri{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+  details { margin-top: 12px; }
+  summary { font-size: 12px; color: #64748B; cursor: pointer; }
+  pre {
+    background: #020617; color: #94A3B8; font-size: 11px;
+    padding: 10px; border-radius: 8px; overflow-x: auto;
+    white-space: pre-wrap; word-break: break-all; max-height: 320px; overflow-y: auto;
+    border: 1px solid #1E293B;
+  }
+  .hint { font-size: 12px; color: #64748B; margin-top: 6px; line-height: 1.5; }
+  code { background: #334155; padding: 1px 5px; border-radius: 4px; font-size: 12px; }
 </style>
 </head>
 <body>
 <div class="wrap">
+  <h1>🚌 거제 10번 버스 도착 테스트</h1>
+  <p class="sub">arrtime이 실제로 채워지는지 검증하는 진단 도구 · v0.1</p>
 
-  <header>
-    <div class="vol"><span>요즘여기 <b id="vol">VOL.—</b></span><span id="week">—</span></div>
-    <div class="title">요즘<em id="catWord">핫플</em></div>
-    <div class="tag">추천 많은 순으로 실시간 정렬. 내 주변 기준.</div>
-    <div class="locbar">
-      <span class="pin"></span><span>내 위치 · <span class="dong" id="dong">위치 확인 중…</span></span>
-      <button class="re" id="reloc">다시잡기</button>
+  <!-- 1. 설정 -->
+  <div class="card">
+    <h2>1. 설정</h2>
+    <label>data.go.kr 서비스키 (인코딩키 권장)</label>
+    <input id="key" type="text" placeholder="발급받은 서비스키 붙여넣기" autocomplete="off">
+    <p class="hint">버스정류소정보(15098534) · 버스도착정보(15098530) 둘 다 활용신청 후 같은 키 사용.</p>
+
+    <label>CORS 프록시</label>
+    <select id="proxy">
+      <option value="https://api.allorigins.win/raw?url=">allorigins (기본)</option>
+      <option value="https://corsproxy.io/?url=">corsproxy.io</option>
+      <option value="">직접호출 (프록시 없음 · 로컬 테스트용)</option>
+    </select>
+    <p class="hint">GitHub Pages는 HTTPS라 CORS 때문에 프록시 필요. 하나 막히면 다른 걸로 교체.</p>
+  </div>
+
+  <!-- 2. 도시코드 -->
+  <div class="card">
+    <h2>2. 거제 도시코드</h2>
+    <button id="btnCity" class="ghost">거제 도시코드 찾기</button>
+    <div id="cityStatus"></div>
+  </div>
+
+  <!-- 3. 근처 정류소 -->
+  <div class="card">
+    <h2>3. 근처 정류소</h2>
+    <div class="row">
+      <div>
+        <label>위도 (Lat)</label>
+        <input id="lat" type="text" value="34.8806">
+      </div>
+      <div>
+        <label>경도 (Lng)</label>
+        <input id="lng" type="text" value="128.6217">
+      </div>
     </div>
-  </header>
+    <button id="btnGps" class="ghost">📍 내 위치로 채우기</button>
+    <button id="btnStops">근처 정류소 조회</button>
+    <div id="stopStatus"></div>
+    <div id="stopList"></div>
+  </div>
 
-  <nav id="nav">
-    <button class="cat" data-k="hot"     data-on="1">핫플<span class="em">HOTPLACE</span></button>
-    <button class="cat" data-k="food"    data-on="0">맛집<span class="em">FOOD</span></button>
-    <button class="cat" data-k="fashion" data-on="0">패션<span class="em">FASHION</span></button>
-  </nav>
+  <!-- 4. 도착정보 -->
+  <div class="card">
+    <h2>4. 도착정보 (10번 강조)</h2>
+    <p class="hint">위에서 정류소를 하나 탭하면 자동 조회됩니다.</p>
+    <div id="arrStatus"></div>
+    <div id="arrList"></div>
+  </div>
 
-  <section class="pick">
-    <div class="pick-hd"><span class="ai">AI</span><h3>내 주변에서 하나만 골라줘</h3></div>
-    <div class="pick-bd">
-      <p class="lab">무드</p>
-      <div class="chips" id="moodChips"></div>
-      <button class="go" id="goBtn">오늘의 픽 받기</button>
-      <div class="result" id="result"></div>
-    </div>
-  </section>
-
-  <div class="feed-hd"><h2 id="feedTitle">이번 주 핫플</h2><span class="sort" id="sortLbl">추천순 ▾</span></div>
-  <p class="note" id="note"></p>
-  <div class="feed" id="feed"></div>
-
-</div>
-
-<div class="sharebar">
-  <button id="saveTab">찜 <span id="saveCnt">0</span></button>
-  <button class="pri" id="shareBtn">이 차트 공유</button>
+  <details>
+    <summary>🔧 디버그 · 원본 응답 로그</summary>
+    <pre id="log">(아직 호출 없음)</pre>
+  </details>
 </div>
 
 <script>
-/* =========================================================================
-   요즘여기 v0.2  —  GPS 위치 기준 + 추천수 기반 실시간 랭킹
-   구조 핵심:
-     1) 지역 = 내 위치(GPS). 동 이름은 임베드 센트로이드 최근접(API 無, gongo 방식).
-     2) 순위 = 추천수. 추천 누르면 카운트↑ → 재정렬.
-   ⚠ 교차-사용자 집계는 백엔드 필요(Cloudflare Worker+KV). 현재는 로컬+시드값.
-   ========================================================================= */
-const VERSION="v0_2";
-const SAVE_KEY="yozm_saved_"+VERSION;
-const RECS_KEY="yozm_recs_"+VERSION;   // 내가 누른 추천 {id:1}
-const GEMINI_KEY="";                    // 커밋 시 항상 빈 문자열
+const $ = id => document.getElementById(id);
+let CITY = null;          // 거제 도시코드
+let SELECTED_STOP = null; // 선택 정류소
 
-/* ---- 임베드 동 센트로이드 (샘플 / gongo 데이터로 교체) ---- */
-const DONG=[
-  {n:"성수동",lat:37.5446,lng:127.0560},{n:"한남동",lat:37.5340,lng:127.0020},
-  {n:"망원동",lat:37.5556,lng:126.9101},{n:"연남동",lat:37.5638,lng:126.9255},
-  {n:"압구정동",lat:37.5274,lng:127.0286},{n:"을지로",lat:37.5662,lng:126.9910}
-];
+function logRaw(title, text){
+  const el = $('log');
+  el.textContent = '── ' + title + ' ──\n' + text + '\n\n' + el.textContent;
+}
+function setStatus(el, cls, msg){
+  el.innerHTML = '<div class="status ' + cls + '">' + msg + '</div>';
+}
 
-/* ---- 큐레이션 데이터 (전부 샘플 / recs=시드 추천수) ---- */
-const DATA={
-  hot:{word:"핫플",title:"이번 주 핫플",places:true,
-    moods:["혼자 조용히","사진 맛집","데이트","친구랑 우르르","힙한 거"],
-    items:[
-      {id:"h1",nm:"무드 성수",area:"성수동",lat:37.5448,lng:127.0566,recs:1284,vibe:"창고 개조 복합문화공간. 1층 카페, 2층 편집숍.",tags:["복합문화","창고개조"]},
-      {id:"h2",nm:"옥상 어딘가",area:"한남동",lat:37.5338,lng:127.0035,recs:980,vibe:"노을 시간대 루프탑. 해질녘 오렌지빛 통창 뷰.",tags:["루프탑","노을","인생샷"]},
-      {id:"h3",nm:"리버사이드 망원",area:"망원동",lat:37.5560,lng:126.9095,recs:1102,vibe:"한강 끼고 도는 산책 코스 + 작은 로스터리 골목.",tags:["한강","러닝","로컬카페"]},
-      {id:"h4",nm:"골목 책방거리",area:"연남동",lat:37.5640,lng:126.9260,recs:771,vibe:"독립서점 4곳이 한 골목에. 큐레이션 셀렉트.",tags:["독립서점","북토크"]},
-    ]},
-  food:{word:"맛집",title:"이번 주 맛집",places:true,
-    moods:["혼밥","줄서도 됨","가성비","분위기","술 한잔"],
-    items:[
-      {id:"f1",nm:"하이볼 골목집",area:"을지로",lat:37.5665,lng:126.9915,recs:1530,vibe:"노포 분위기 그대로, 하이볼 4종 + 안주 단출.",tags:["하이볼","노포","웨이팅"]},
-      {id:"f2",nm:"베이커리 온",area:"성수동",lat:37.5450,lng:127.0558,recs:1340,vibe:"소금빵·크루아상 오전 한정 굽기.",tags:["소금빵","오전한정"]},
-      {id:"f3",nm:"마라 베이스",area:"건대",lat:37.5405,lng:127.0700,recs:1190,vibe:"마라탕 커스텀 30종 + 꿔바로우 바삭.",tags:["마라탕","맵부심"]},
-      {id:"f4",nm:"국수 한그릇",area:"망원동",lat:37.5552,lng:126.9098,recs:860,vibe:"멸치육수 잔치국수 단일 메뉴 노포.",tags:["국수","가성비"]},
-    ]},
-  fashion:{word:"패션",title:"이번 주 패션 키워드",places:false,
-    moods:["미니멀","스트릿","러블리","Y2K","아메카지"],
-    items:[
-      {id:"p1",nm:"워시드 데님 셋업",area:"KEYWORD",recs:2240,vibe:"탈색 진하게 들어간 데님 상하 셋업. 톤온톤이 포인트.",tags:["데님","셋업","워시드"]},
-      {id:"p2",nm:"발레코어",area:"KEYWORD",recs:1980,vibe:"리본·플랫슈즈·시스루 레이어드. 데일리로 톤 다운.",tags:["발레코어","리본"]},
-      {id:"p3",nm:"고프코어 잔존",area:"KEYWORD",recs:1410,vibe:"기능성 자켓 + 트레킹화 도심 믹스. 여름엔 경량화.",tags:["고프코어","기능성"]},
-      {id:"p4",nm:"버건디 포인트",area:"KEYWORD",recs:1120,vibe:"가방·슈즈 한 곳만 버건디로 톤 잡기. 올블랙에 포인트.",tags:["버건디","포인트컬러"]},
-    ]},
+// data.go.kr 호출 (프록시 경유 + 방어적 JSON 파싱)
+async function callApi(path, params, title){
+  const key = $('key').value.trim();
+  if(!key){ throw new Error('서비스키를 먼저 입력하세요.'); }
+
+  const base = 'https://apis.data.go.kr/1613000/' + path;
+  const usp = new URLSearchParams(params);
+  usp.set('serviceKey', key);
+  usp.set('_type', 'json');
+  const target = base + '?' + usp.toString();
+
+  const proxy = $('proxy').value;
+  const url = proxy ? proxy + encodeURIComponent(target) : target;
+
+  const res = await fetch(url);
+  const text = await res.text();
+  logRaw(title + ' (HTTP ' + res.status + ')', text.slice(0, 4000));
+
+  let json;
+  try { json = JSON.parse(text); }
+  catch(e){
+    // data.go.kr 게이트웨이 오류는 JSON 요청에도 XML로 옴
+    if(text.includes('SERVICE_KEY_IS_NOT_REGISTERED'))
+      throw new Error('서비스키 미등록 오류. 인코딩키↔디코딩키 바꿔서 재시도.');
+    if(text.includes('LIMITED_NUMBER_OF_SERVICE'))
+      throw new Error('일일 트래픽 초과.');
+    throw new Error('JSON 파싱 실패 (아래 디버그 로그에 원본 확인). 대개 XML 오류 응답.');
+  }
+
+  const header = json?.response?.header;
+  if(header && header.resultCode !== '00' && header.resultCode !== '0')
+    throw new Error('API 오류 [' + header.resultCode + '] ' + header.resultMsg);
+
+  const items = json?.response?.body?.items?.item;
+  if(!items) return [];
+  return Array.isArray(items) ? items : [items];
+}
+
+// 2. 도시코드
+$('btnCity').onclick = async () => {
+  setStatus($('cityStatus'), 'wait', '조회 중...');
+  try {
+    const items = await callApi('BusSttnInfoInqireService/getCtyCodeList', {}, '도시코드');
+    const geoje = items.find(x => (x.cityname||'').includes('거제'));
+    if(geoje){
+      CITY = geoje.citycode;
+      setStatus($('cityStatus'), 'ok', '✅ 거제 도시코드: <b>' + CITY + '</b> (' + geoje.cityname + ')');
+    } else {
+      const gyeongnam = items.filter(x => String(x.citycode).startsWith('38'));
+      setStatus($('cityStatus'), 'err',
+        '"거제" 미발견. 경남권 후보를 로그에서 확인:<br>' +
+        gyeongnam.map(x => x.citycode+':'+x.cityname).join(', '));
+    }
+  } catch(e){ setStatus($('cityStatus'), 'err', '❌ ' + e.message); }
 };
 
-let curCat="hot", myMood=null, userLoc=null;
-let saved=JSON.parse(localStorage.getItem(SAVE_KEY)||"{}");
-let myRecs=JSON.parse(localStorage.getItem(RECS_KEY)||"{}");
-const INK={hot:"var(--hot)",food:"var(--food)",fashion:"var(--fashion)"};
-
-/* ---- 주차 라벨 ---- */
-(function(){const now=new Date();
-  document.getElementById("vol").textContent="VOL."+(Math.floor((now-new Date(2026,0,1))/(7*864e5))+1);
-  document.getElementById("week").textContent=`${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,"0")} · ${Math.ceil(now.getDate()/7)}주차`;
-})();
-
-/* ---- 위치 ---- */
-function haversine(a,b,c,d){const R=6371e3,t=x=>x*Math.PI/180;
-  const dla=t(c-a),dlo=t(d-b),x=Math.sin(dla/2)**2+Math.cos(t(a))*Math.cos(t(c))*Math.sin(dlo/2)**2;
-  return R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));}
-function nearestDong(lat,lng){let best=DONG[0],bd=1e12;
-  DONG.forEach(d=>{const dd=haversine(lat,lng,d.lat,d.lng);if(dd<bd){bd=dd;best=d;}});return best.n;}
-function setLoc(lat,lng,real){
-  userLoc={lat,lng};
-  document.getElementById("dong").textContent=nearestDong(lat,lng)+(real?"":" (예시)");
-  renderFeed();
-}
-function initLoc(){
-  document.getElementById("dong").textContent="위치 확인 중…";
-  if(!navigator.geolocation){return setLoc(37.5448,127.0566,false);}
+// GPS
+$('btnGps').onclick = () => {
+  if(!navigator.geolocation){ alert('위치 미지원'); return; }
   navigator.geolocation.getCurrentPosition(
-    p=>setLoc(p.coords.latitude,p.coords.longitude,true),
-    ()=>setLoc(37.5448,127.0566,false),
-    {timeout:6000,maximumAge:60000}
+    p => { $('lat').value = p.coords.latitude.toFixed(6); $('lng').value = p.coords.longitude.toFixed(6); },
+    e => alert('위치 실패: ' + e.message),
+    { enableHighAccuracy: true, timeout: 8000 }
   );
-}
-document.getElementById("reloc").addEventListener("click",initLoc);
+};
 
-/* ---- 추천수(시드+내표) ---- */
-function recCount(it){return it.recs+(myRecs[it.id]?1:0);}
-function fmt(n){return n.toLocaleString();}
+// 3. 근처 정류소
+$('btnStops').onclick = async () => {
+  if(!CITY){ setStatus($('stopStatus'), 'err', '먼저 2번에서 도시코드를 찾으세요.'); return; }
+  setStatus($('stopStatus'), 'wait', '조회 중...');
+  $('stopList').innerHTML = '';
+  try {
+    const items = await callApi('BusSttnInfoInqireService/getCrdntPrxmtSttnList', {
+      gpsLati: $('lat').value.trim(),
+      gpsLong: $('lng').value.trim(),
+      numOfRows: 12
+    }, '근처정류소');
+    if(!items.length){ setStatus($('stopStatus'), 'err', '근처 정류소 0건. 좌표 확인.'); return; }
+    setStatus($('stopStatus'), 'ok', '✅ ' + items.length + '개 정류소. 하나 탭하면 도착정보 조회.');
+    $('stopList').innerHTML = items.map(s =>
+      '<div class="stop" data-node="' + s.nodeid + '" data-nm="' + (s.nodenm||'') + '">' +
+        '<div class="nm">' + (s.nodenm||'(이름없음)') + '</div>' +
+        '<div class="meta">ID: ' + s.nodeid + ' · ' + (s.gpsLati||'?') + ', ' + (s.gpsLong||'?') + '</div>' +
+      '</div>'
+    ).join('');
+    document.querySelectorAll('.stop').forEach(el => {
+      el.onclick = () => selectStop(el.dataset.node, el.dataset.nm);
+    });
+  } catch(e){ setStatus($('stopStatus'), 'err', '❌ ' + e.message); }
+};
 
-/* ---- 카테고리 ---- */
-function applyCat(){
-  document.documentElement.style.setProperty("--c",INK[curCat]);
-  const d=DATA[curCat];
-  document.getElementById("catWord").textContent=d.word;
-  document.getElementById("feedTitle").textContent=d.title;
-  document.querySelectorAll(".cat").forEach(b=>b.dataset.on=b.dataset.k===curCat?"1":"0");
-  document.getElementById("note").textContent=d.places
-    ? "내 주변 항목을 추천순으로 보여줘. 추천하면 순위가 올라가."
-    : "위치와 무관한 트렌드 키워드. 추천 많은 순.";
-  document.getElementById("sortLbl").textContent=d.places?"추천순 ▾":"추천순 ▾";
-  myMood=null;
-  document.getElementById("moodChips").innerHTML=d.moods.map(m=>`<button class="chip" data-v="${m}">${m}</button>`).join("");
-  clearResult(); renderFeed();
-}
+// 4. 도착정보
+async function selectStop(nodeId, nodeNm){
+  SELECTED_STOP = { nodeId, nodeNm };
+  setStatus($('arrStatus'), 'wait', '"' + nodeNm + '" 도착정보 조회 중...');
+  $('arrList').innerHTML = '';
+  try {
+    const items = await callApi('ArvlInfoInqireService/getSttnAcctoArvlPrearngeInfoList', {
+      cityCode: CITY, nodeId: nodeId, numOfRows: 30
+    }, '도착정보');
 
-/* ---- 피드 (추천순 정렬 = 순위) ---- */
-function renderFeed(){
-  const d=DATA[curCat];
-  const list=[...d.items].sort((a,b)=>recCount(b)-recCount(a));
-  document.getElementById("feed").innerHTML=list.map((it,i)=>{
-    const rank=i+1, sOn=saved[it.id]?"1":"0", rOn=myRecs[it.id]?"1":"0";
-    let dist="";
-    if(d.places&&userLoc){
-      const m=haversine(userLoc.lat,userLoc.lng,it.lat,it.lng);
-      dist=`<span class="dist">${m<1000?Math.round(m)+"m":(m/1000).toFixed(1)+"km"}</span>`;
+    if(!items.length){
+      setStatus($('arrStatus'), 'err', '❌ 도착정보 0건 — 이 정류소는 지금 예정 버스가 없거나, 거제 BIS가 TAGO에 도착예측을 안 넘김.');
+      return;
     }
-    return `<div class="item" data-id="${it.id}">
-      <div class="rank">${rank}<small>RANK</small></div>
-      <div class="body">
-        <p class="nm">${it.nm}</p>
-        <div class="meta"><span class="area">${it.area}</span>${dist}</div>
-        <p class="vibe">${it.vibe}</p>
-        <div class="tags">${it.tags.map(t=>`<span class="t">${t}</span>`).join("")}</div>
-        <div class="recrow">
-          <button class="recbtn" data-rec="${it.id}" data-on="${rOn}"><span class="h">♥</span>추천</button>
-          <span class="recnum"><b>${fmt(recCount(it))}</b> 추천</span>
-          <button class="save" data-save="${it.id}" data-on="${sOn}">${sOn==="1"?"★":"☆"}</button>
-        </div>
-      </div>
-    </div>`;
-  }).join("");
-  document.getElementById("saveCnt").textContent=Object.keys(saved).length;
+
+    const has10 = items.some(x => String(x.routeno) === '10');
+    const hasArr = items.some(x => x.arrtime && Number(x.arrtime) > 0);
+
+    let verdict;
+    if(hasArr && has10) verdict = ['ok', '🎉 성공! 10번 + arrtime 둘 다 정상. 앱 만들 각 나옴.'];
+    else if(hasArr && !has10) verdict = ['wait', '⚠️ arrtime은 나오는데 이 정류소엔 10번이 없음. 10번 지나는 정류소로 재시도.'];
+    else if(!hasArr) verdict = ['err', '❌ 도착정보는 오는데 arrtime이 비었음 — 거제 BIS가 예측시간 미제공. 방향 재검토 필요.'];
+    setStatus($('arrStatus'), verdict[0], verdict[1]);
+
+    // 10번 먼저 정렬
+    items.sort((a,b) => (String(b.routeno)==='10') - (String(a.routeno)==='10'));
+
+    $('arrList').innerHTML = items.map(a => {
+      const is10 = String(a.routeno) === '10';
+      const sec = Number(a.arrtime);
+      const timeTxt = sec > 0
+        ? '<span class="time">약 ' + Math.floor(sec/60) + '분 ' + (sec%60) + '초 (' + sec + 's)</span>'
+        : '<span class="time none">arrtime 없음/0</span>';
+      return '<div class="arr' + (is10 ? ' hit' : '') + '">' +
+        '<div class="route">' + (a.routeno||'?') + '번' + (is10 ? '<span class="tag">타겟</span>' : '') + '</div>' +
+        timeTxt +
+        '<div class="cnt">' + (a.arrprevstationcnt!=null ? a.arrprevstationcnt + '번째 전' : '') +
+          (a.routetp ? ' · ' + a.routetp : '') + '</div>' +
+      '</div>';
+    }).join('');
+
+  } catch(e){ setStatus($('arrStatus'), 'err', '❌ ' + e.message); }
 }
-
-/* ---- 인터랙션 ---- */
-document.getElementById("feed").addEventListener("click",e=>{
-  const rec=e.target.closest("[data-rec]"), sv=e.target.closest("[data-save]");
-  if(rec){const id=rec.dataset.rec;
-    if(myRecs[id])delete myRecs[id];else myRecs[id]=1;
-    localStorage.setItem(RECS_KEY,JSON.stringify(myRecs));
-    renderFeed(); // 재정렬 → 순위 이동
-  }
-  if(sv){const id=sv.dataset.save;
-    if(saved[id])delete saved[id];else saved[id]=1;
-    localStorage.setItem(SAVE_KEY,JSON.stringify(saved));
-    renderFeed();
-  }
-});
-document.getElementById("nav").addEventListener("click",e=>{
-  const b=e.target.closest(".cat");if(!b)return;curCat=b.dataset.k;applyCat();
-});
-document.getElementById("moodChips").addEventListener("click",e=>{
-  const c=e.target.closest(".chip");if(!c)return;
-  document.querySelectorAll("#moodChips .chip").forEach(x=>x.dataset.on="0");
-  c.dataset.on="1";myMood=c.dataset.v;
-});
-
-/* ---- AI 픽 ---- */
-const resultBox=document.getElementById("result");
-function clearResult(){resultBox.className="result";resultBox.innerHTML="";}
-document.getElementById("goBtn").addEventListener("click",async()=>{
-  resultBox.className="result on";resultBox.innerHTML=`<p class="spin">에디터 AI가 고르는 중…</p>`;
-  const btn=document.getElementById("goBtn");btn.disabled=true;
-  const d=DATA[curCat];
-  const dong=document.getElementById("dong").textContent.replace(" (예시)","");
-  const cand=[...d.items].sort((a,b)=>recCount(b)-recCount(a)).map(i=>`${i.nm}(${i.area}) ${i.vibe}`).join(" / ");
-  const prompt=`한국 MZ 트렌드 에디터. 아래 ${d.word} 후보 중 사용자에게 맞는 하나를 감각있게 추천.
-후보: ${cand}
-사용자 위치: ${d.places?dong:"무관"} / 무드: ${myMood||"상관없음"}
-JSON만: {"hl":"15자내 헤드라인","bl":"40자내 이유","tags":["태그","태그","태그"]}`;
-  try{showPick(await callGemini(prompt));}
-  catch(e){showPick(demoPick(d));}
-  finally{btn.disabled=false;}
-});
-async function callGemini(prompt){
-  if(!GEMINI_KEY)throw new Error("no key");
-  const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${GEMINI_KEY}`,
-    {method:"POST",headers:{"Content-Type":"application/json"},
-     body:JSON.stringify({contents:[{parts:[{text:prompt}]}],
-       generationConfig:{thinkingConfig:{thinkingBudget:0},temperature:0.4,responseMimeType:"application/json"}})});
-  const j=await r.json();return JSON.parse(j.candidates[0].content.parts[0].text);
-}
-function demoPick(d){
-  const it=[...d.items].sort((a,b)=>recCount(b)-recCount(a))[0];
-  return {hl:it.nm,bl:`${myMood?myMood+" 무드엔 ":""}${it.vibe}`,tags:it.tags};
-}
-function showPick(r){
-  resultBox.className="result on";
-  resultBox.innerHTML=`<p class="hl">${r.hl}</p><p class="bl">${r.bl}</p>
-    <div class="rtags">${(r.tags||[]).map(t=>`<span class="rtag">#${t}</span>`).join("")}</div>`;
-}
-
-/* ---- 공유 / 찜 ---- */
-document.getElementById("shareBtn").addEventListener("click",()=>{
-  const d=DATA[curCat];
-  const top=[...d.items].sort((a,b)=>recCount(b)-recCount(a)).slice(0,3)
-    .map((i,x)=>`${x+1}. ${i.nm} (${fmt(recCount(i))}추천)`).join("\n");
-  const text=`[요즘여기] 이번 주 ${d.word} 추천 차트\n${top}\n\n요즘 뭐가 뜨는지 확인해봐 👀`;
-  try{window.parent.postMessage({type:"SHARE_TEXT",text},"*");}catch(e){}
-  if(navigator.clipboard)navigator.clipboard.writeText(text).then(()=>toast("복사됐어."));
-});
-document.getElementById("saveTab").addEventListener("click",()=>{
-  const n=Object.keys(saved).length;toast(n?`찜한 곳 ${n}개`:"☆ 눌러서 담아봐.");
-});
-function toast(m){let t=document.getElementById("_t");
-  if(!t){t=document.createElement("div");t.id="_t";
-    t.style.cssText="position:fixed;left:50%;bottom:78px;transform:translateX(-50%);background:#1B1A24;color:#EFEDE6;font-size:12.5px;font-weight:600;padding:9px 16px;border-radius:999px;z-index:10000;font-family:'IBM Plex Sans KR';transition:.25s;opacity:0;";
-    document.body.appendChild(t);}
-  t.textContent=m;t.style.opacity="1";clearTimeout(t._h);t._h=setTimeout(()=>t.style.opacity="0",1600);}
-
-document.addEventListener("gesturestart",e=>e.preventDefault());
-document.addEventListener("touchmove",e=>{if(e.scale&&e.scale!==1)e.preventDefault();},{passive:false});
-
-applyCat();
-initLoc();
 </script>
 </body>
 </html>
