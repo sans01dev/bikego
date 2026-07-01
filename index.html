@@ -3,287 +3,225 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>거제 10번 버스 도착 테스트 v0.1</title>
+<title>거제 10번 버스 도착 테스트 v0.2</title>
 <style>
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  body {
-    margin: 0; padding: 0;
-    font-family: -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
-    background: #0F172A; color: #E2E8F0;
-    font-size: 15px; line-height: 1.5;
-  }
-  .wrap { max-width: 560px; margin: 0 auto; padding: 16px 16px 60px; }
-  h1 { font-size: 19px; font-weight: 800; margin: 8px 0 4px; color: #F8FAFC; }
-  .sub { font-size: 13px; color: #94A3B8; margin: 0 0 16px; }
-
-  .card {
-    background: #1E293B; border: 1px solid #334155;
-    border-radius: 14px; padding: 14px; margin-bottom: 12px;
-  }
-  .card h2 { font-size: 14px; font-weight: 700; margin: 0 0 10px; color: #CBD5E1; }
-
-  label { display: block; font-size: 12px; font-weight: 600; color: #94A3B8; margin: 8px 0 4px; }
-  input, select {
-    width: 100%; padding: 10px 12px; font-size: 15px;
-    background: #0F172A; color: #E2E8F0;
-    border: 1px solid #475569; border-radius: 10px; outline: none;
-  }
-  input:focus, select:focus { border-color: #38BDF8; }
-  .row { display: flex; gap: 8px; }
-  .row > div { flex: 1; }
-
-  button {
-    width: 100%; padding: 12px; font-size: 15px; font-weight: 700;
-    background: #38BDF8; color: #0F172A;
-    border: none; border-radius: 10px; margin-top: 10px; cursor: pointer;
-  }
-  button:active { opacity: .85; }
-  button.ghost { background: #334155; color: #E2E8F0; }
-  button:disabled { opacity: .4; }
-
-  .status { font-size: 13px; padding: 8px 10px; border-radius: 8px; margin-top: 8px; }
-  .status.ok { background: #052E16; color: #86EFAC; border: 1px solid #166534; }
-  .status.err { background: #3F1D1D; color: #FCA5A5; border: 1px solid #7F1D1D; }
-  .status.wait { background: #1E293B; color: #FCD34D; border: 1px solid #78350F; }
-
-  .stop {
-    padding: 10px 12px; border: 1px solid #334155; border-radius: 10px;
-    margin-top: 8px; cursor: pointer; background: #0F172A;
-  }
-  .stop:active { background: #1E293B; }
-  .stop .nm { font-weight: 700; font-size: 15px; color: #F1F5F9; }
-  .stop .meta { font-size: 12px; color: #94A3B8; margin-top: 2px; }
-
-  .arr {
-    padding: 12px; border-radius: 10px; margin-top: 8px;
-    border: 1px solid #334155; background: #0F172A;
-  }
-  .arr.hit { border-color: #38BDF8; background: #082F49; }
-  .arr .route { font-size: 18px; font-weight: 800; color: #F8FAFC; }
-  .arr .route .tag { font-size: 11px; font-weight: 700; color: #0F172A; background: #38BDF8; padding: 2px 6px; border-radius: 6px; margin-left: 6px; vertical-align: middle; }
-  .arr .time { font-size: 15px; font-weight: 700; color: #7DD3FC; margin-top: 4px; }
-  .arr .time.none { color: #FCA5A5; }
-  .arr .cnt { font-size: 12px; color: #94A3B8; margin-top: 2px; }
-
-  details { margin-top: 12px; }
-  summary { font-size: 12px; color: #64748B; cursor: pointer; }
-  pre {
-    background: #020617; color: #94A3B8; font-size: 11px;
-    padding: 10px; border-radius: 8px; overflow-x: auto;
-    white-space: pre-wrap; word-break: break-all; max-height: 320px; overflow-y: auto;
-    border: 1px solid #1E293B;
-  }
-  .hint { font-size: 12px; color: #64748B; margin-top: 6px; line-height: 1.5; }
-  code { background: #334155; padding: 1px 5px; border-radius: 4px; font-size: 12px; }
+  body { margin:0; padding:0; font-family:-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+    background:#0F172A; color:#E2E8F0; font-size:15px; line-height:1.5; }
+  .wrap { max-width:560px; margin:0 auto; padding:16px 16px 60px; }
+  h1 { font-size:19px; font-weight:800; margin:8px 0 4px; color:#F8FAFC; }
+  .sub { font-size:13px; color:#94A3B8; margin:0 0 16px; }
+  .card { background:#1E293B; border:1px solid #334155; border-radius:14px; padding:14px; margin-bottom:12px; }
+  .card h2 { font-size:14px; font-weight:700; margin:0 0 10px; color:#CBD5E1; }
+  label { display:block; font-size:12px; font-weight:600; color:#94A3B8; margin:8px 0 4px; }
+  input, select { width:100%; padding:10px 12px; font-size:15px; background:#0F172A; color:#E2E8F0;
+    border:1px solid #475569; border-radius:10px; outline:none; }
+  input:focus, select:focus { border-color:#38BDF8; }
+  .row { display:flex; gap:8px; } .row>div { flex:1; }
+  button { width:100%; padding:12px; font-size:15px; font-weight:700; background:#38BDF8; color:#0F172A;
+    border:none; border-radius:10px; margin-top:10px; cursor:pointer; }
+  button:active { opacity:.85; } button.ghost { background:#334155; color:#E2E8F0; }
+  .status { font-size:13px; padding:8px 10px; border-radius:8px; margin-top:8px; }
+  .status.ok { background:#052E16; color:#86EFAC; border:1px solid #166534; }
+  .status.err { background:#3F1D1D; color:#FCA5A5; border:1px solid #7F1D1D; }
+  .status.wait { background:#1E293B; color:#FCD34D; border:1px solid #78350F; }
+  .rawbox { margin-top:6px; background:#020617; color:#93C5FD; font-size:11px; padding:8px;
+    border-radius:8px; white-space:pre-wrap; word-break:break-all; max-height:180px; overflow-y:auto;
+    border:1px solid #1E293B; display:none; }
+  .rawbox.show { display:block; }
+  .stop { padding:10px 12px; border:1px solid #334155; border-radius:10px; margin-top:8px; cursor:pointer; background:#0F172A; }
+  .stop:active { background:#1E293B; }
+  .stop .nm { font-weight:700; font-size:15px; color:#F1F5F9; }
+  .stop .meta { font-size:12px; color:#94A3B8; margin-top:2px; }
+  .arr { padding:12px; border-radius:10px; margin-top:8px; border:1px solid #334155; background:#0F172A; }
+  .arr.hit { border-color:#38BDF8; background:#082F49; }
+  .arr .route { font-size:18px; font-weight:800; color:#F8FAFC; }
+  .arr .route .tag { font-size:11px; font-weight:700; color:#0F172A; background:#38BDF8; padding:2px 6px; border-radius:6px; margin-left:6px; vertical-align:middle; }
+  .arr .time { font-size:15px; font-weight:700; color:#7DD3FC; margin-top:4px; }
+  .arr .time.none { color:#FCA5A5; }
+  .arr .cnt { font-size:12px; color:#94A3B8; margin-top:2px; }
+  .hint { font-size:12px; color:#64748B; margin-top:6px; line-height:1.5; }
 </style>
 </head>
 <body>
 <div class="wrap">
   <h1>🚌 거제 10번 버스 도착 테스트</h1>
-  <p class="sub">arrtime이 실제로 채워지는지 검증하는 진단 도구 · v0.1</p>
+  <p class="sub">arrtime 검증 · 오류시 원본응답 화면표시 · v0.2</p>
 
-  <!-- 1. 설정 -->
   <div class="card">
     <h2>1. 설정</h2>
-    <label>data.go.kr 서비스키 (인코딩키 권장)</label>
-    <input id="key" type="text" placeholder="발급받은 서비스키 붙여넣기" autocomplete="off">
-    <p class="hint">버스정류소정보(15098534) · 버스도착정보(15098530) 둘 다 활용신청 후 같은 키 사용.</p>
-
+    <label>data.go.kr 서비스키</label>
+    <input id="key" type="text" placeholder="서비스키 붙여넣기" autocomplete="off">
+    <p class="hint">정류소정보(15098534) · 도착정보(15098530) <b>둘 다</b> 활용신청됐는지 확인. 하나만 신청하면 그 서비스 호출만 미등록 오류남.</p>
     <label>CORS 프록시</label>
     <select id="proxy">
-      <option value="https://api.allorigins.win/raw?url=">allorigins (기본)</option>
-      <option value="https://corsproxy.io/?url=">corsproxy.io</option>
-      <option value="">직접호출 (프록시 없음 · 로컬 테스트용)</option>
+      <option value="ag_get">allorigins /get (기본·가장 안정)</option>
+      <option value="ag_raw">allorigins /raw</option>
+      <option value="corsproxy">corsproxy.io</option>
+      <option value="direct">직접호출 (프록시 없음)</option>
     </select>
-    <p class="hint">GitHub Pages는 HTTPS라 CORS 때문에 프록시 필요. 하나 막히면 다른 걸로 교체.</p>
+    <p class="hint">/get은 응답을 JSON 봉투로 감싸 와서 프록시 오류/원본 구분이 쉬움. 막히면 순서대로 바꿔보기.</p>
   </div>
 
-  <!-- 2. 도시코드 -->
   <div class="card">
     <h2>2. 거제 도시코드</h2>
     <button id="btnCity" class="ghost">거제 도시코드 찾기</button>
     <div id="cityStatus"></div>
+    <div id="cityRaw" class="rawbox"></div>
   </div>
 
-  <!-- 3. 근처 정류소 -->
   <div class="card">
     <h2>3. 근처 정류소</h2>
     <div class="row">
-      <div>
-        <label>위도 (Lat)</label>
-        <input id="lat" type="text" value="34.8806">
-      </div>
-      <div>
-        <label>경도 (Lng)</label>
-        <input id="lng" type="text" value="128.6217">
-      </div>
+      <div><label>위도</label><input id="lat" type="text" value="34.8806"></div>
+      <div><label>경도</label><input id="lng" type="text" value="128.6217"></div>
     </div>
     <button id="btnGps" class="ghost">📍 내 위치로 채우기</button>
     <button id="btnStops">근처 정류소 조회</button>
     <div id="stopStatus"></div>
+    <div id="stopRaw" class="rawbox"></div>
     <div id="stopList"></div>
   </div>
 
-  <!-- 4. 도착정보 -->
   <div class="card">
     <h2>4. 도착정보 (10번 강조)</h2>
-    <p class="hint">위에서 정류소를 하나 탭하면 자동 조회됩니다.</p>
+    <p class="hint">위에서 정류소를 탭하면 자동 조회. 아래에 직접 입력해서 바로 쏠 수도 있음.</p>
+    <div class="row">
+      <div><label>cityCode</label><input id="mCity" type="text" placeholder="예: 38xxx"></div>
+      <div><label>nodeId</label><input id="mNode" type="text" placeholder="정류소 ID"></div>
+    </div>
+    <button id="btnArr" class="ghost">수동 도착정보 조회</button>
     <div id="arrStatus"></div>
+    <div id="arrRaw" class="rawbox"></div>
     <div id="arrList"></div>
   </div>
-
-  <details>
-    <summary>🔧 디버그 · 원본 응답 로그</summary>
-    <pre id="log">(아직 호출 없음)</pre>
-  </details>
 </div>
 
 <script>
 const $ = id => document.getElementById(id);
-let CITY = null;          // 거제 도시코드
-let SELECTED_STOP = null; // 선택 정류소
+let CITY = null;
+function setStatus(el, cls, msg){ el.innerHTML = '<div class="status '+cls+'">'+msg+'</div>'; }
+function showRaw(el, text){ el.textContent = text; el.classList.add('show'); }
 
-function logRaw(title, text){
-  const el = $('log');
-  el.textContent = '── ' + title + ' ──\n' + text + '\n\n' + el.textContent;
-}
-function setStatus(el, cls, msg){
-  el.innerHTML = '<div class="status ' + cls + '">' + msg + '</div>';
-}
-
-// data.go.kr 호출 (프록시 경유 + 방어적 JSON 파싱)
-async function callApi(path, params, title){
+// 프록시 경유 호출. 성공하면 {items, raw}, 실패하면 raw 붙여서 throw
+async function callApi(path, params, service){
   const key = $('key').value.trim();
-  if(!key){ throw new Error('서비스키를 먼저 입력하세요.'); }
+  if(!key) throw new Error('서비스키를 먼저 입력하세요.');
 
-  const base = 'https://apis.data.go.kr/1613000/' + path;
   const usp = new URLSearchParams(params);
   usp.set('serviceKey', key);
   usp.set('_type', 'json');
-  const target = base + '?' + usp.toString();
+  const target = 'https://apis.data.go.kr/1613000/'+path+'?'+usp.toString();
 
-  const proxy = $('proxy').value;
-  const url = proxy ? proxy + encodeURIComponent(target) : target;
+  const mode = $('proxy').value;
+  let fetchUrl, unwrap = t => t;
+  if(mode==='ag_get'){ fetchUrl='https://api.allorigins.win/get?url='+encodeURIComponent(target);
+    unwrap = t => { const e=JSON.parse(t); return e.contents; }; }
+  else if(mode==='ag_raw'){ fetchUrl='https://api.allorigins.win/raw?url='+encodeURIComponent(target); }
+  else if(mode==='corsproxy'){ fetchUrl='https://corsproxy.io/?url='+encodeURIComponent(target); }
+  else { fetchUrl=target; }
 
-  const res = await fetch(url);
-  const text = await res.text();
-  logRaw(title + ' (HTTP ' + res.status + ')', text.slice(0, 4000));
+  let res, outer;
+  try { res = await fetch(fetchUrl); outer = await res.text(); }
+  catch(e){ const err=new Error('네트워크/프록시 요청 실패: '+e.message); err.raw='(fetch 자체 실패 — 프록시 교체 필요)'; throw err; }
 
+  let body;
+  try { body = unwrap(outer); }
+  catch(e){ const err=new Error('프록시 봉투 파싱 실패 (프록시가 오류페이지 반환)'); err.raw=outer.slice(0,600); throw err; }
+
+  // 실제 data.go.kr 바디를 JSON 파싱
   let json;
-  try { json = JSON.parse(text); }
+  try { json = JSON.parse(body); }
   catch(e){
-    // data.go.kr 게이트웨이 오류는 JSON 요청에도 XML로 옴
-    if(text.includes('SERVICE_KEY_IS_NOT_REGISTERED'))
-      throw new Error('서비스키 미등록 오류. 인코딩키↔디코딩키 바꿔서 재시도.');
-    if(text.includes('LIMITED_NUMBER_OF_SERVICE'))
-      throw new Error('일일 트래픽 초과.');
-    throw new Error('JSON 파싱 실패 (아래 디버그 로그에 원본 확인). 대개 XML 오류 응답.');
+    let msg='JSON 파싱 실패 — 아래 원본 확인.';
+    if(body.includes('SERVICE_KEY_IS_NOT_REGISTERED')) msg='❗서비스키 미등록: 이 서비스('+service+') 활용신청 안 됨. 또는 인코딩키↔디코딩키 교체.';
+    else if(body.includes('LIMITED_NUMBER_OF_SERVICE')) msg='❗일일 트래픽 초과.';
+    else if(body.includes('SERVICE ERROR') || body.includes('예산') ) msg='❗API 서비스 오류.';
+    const err=new Error(msg); err.raw=body.slice(0,600); throw err;
   }
 
-  const header = json?.response?.header;
-  if(header && header.resultCode !== '00' && header.resultCode !== '0')
-    throw new Error('API 오류 [' + header.resultCode + '] ' + header.resultMsg);
-
-  const items = json?.response?.body?.items?.item;
-  if(!items) return [];
-  return Array.isArray(items) ? items : [items];
+  const h = json?.response?.header;
+  if(h && h.resultCode!=='00' && h.resultCode!=='0'){
+    const err=new Error('API 오류 ['+h.resultCode+'] '+h.resultMsg); err.raw=body.slice(0,600); throw err;
+  }
+  const it = json?.response?.body?.items?.item;
+  return { items: !it ? [] : (Array.isArray(it)?it:[it]), raw: body.slice(0,600) };
 }
 
-// 2. 도시코드
 $('btnCity').onclick = async () => {
-  setStatus($('cityStatus'), 'wait', '조회 중...');
+  setStatus($('cityStatus'),'wait','조회 중...'); $('cityRaw').classList.remove('show');
   try {
-    const items = await callApi('BusSttnInfoInqireService/getCtyCodeList', {}, '도시코드');
-    const geoje = items.find(x => (x.cityname||'').includes('거제'));
-    if(geoje){
-      CITY = geoje.citycode;
-      setStatus($('cityStatus'), 'ok', '✅ 거제 도시코드: <b>' + CITY + '</b> (' + geoje.cityname + ')');
-    } else {
-      const gyeongnam = items.filter(x => String(x.citycode).startsWith('38'));
-      setStatus($('cityStatus'), 'err',
-        '"거제" 미발견. 경남권 후보를 로그에서 확인:<br>' +
-        gyeongnam.map(x => x.citycode+':'+x.cityname).join(', '));
-    }
-  } catch(e){ setStatus($('cityStatus'), 'err', '❌ ' + e.message); }
+    const {items, raw} = await callApi('BusSttnInfoInqireService/getCtyCodeList', {}, '정류소정보');
+    showRaw($('cityRaw'), raw);
+    const g = items.find(x => (x.cityname||'').includes('거제'));
+    if(g){ CITY=g.citycode; $('mCity').value=CITY;
+      setStatus($('cityStatus'),'ok','✅ 거제 도시코드: <b>'+CITY+'</b>'); }
+    else { const gn=items.filter(x=>String(x.citycode).startsWith('38'));
+      setStatus($('cityStatus'),'err','"거제" 미발견. 경남 후보: '+gn.map(x=>x.citycode+':'+x.cityname).join(', ')); }
+  } catch(e){ setStatus($('cityStatus'),'err','❌ '+e.message); if(e.raw) showRaw($('cityRaw'), e.raw); }
 };
 
-// GPS
 $('btnGps').onclick = () => {
   if(!navigator.geolocation){ alert('위치 미지원'); return; }
+  setStatus($('stopStatus'),'wait','📍 위치 확인 중...');
   navigator.geolocation.getCurrentPosition(
-    p => { $('lat').value = p.coords.latitude.toFixed(6); $('lng').value = p.coords.longitude.toFixed(6); },
-    e => alert('위치 실패: ' + e.message),
-    { enableHighAccuracy: true, timeout: 8000 }
+    p => { $('lat').value=p.coords.latitude.toFixed(6); $('lng').value=p.coords.longitude.toFixed(6);
+      setStatus($('stopStatus'),'ok','위치 채움. 조회 눌러.'); },
+    e => setStatus($('stopStatus'),'err','위치 실패('+e.message+') — 기본 좌표로 그냥 조회해도 됨.'),
+    { enableHighAccuracy:false, timeout:15000, maximumAge:60000 }
   );
 };
 
-// 3. 근처 정류소
 $('btnStops').onclick = async () => {
-  if(!CITY){ setStatus($('stopStatus'), 'err', '먼저 2번에서 도시코드를 찾으세요.'); return; }
-  setStatus($('stopStatus'), 'wait', '조회 중...');
-  $('stopList').innerHTML = '';
+  if(!CITY){ setStatus($('stopStatus'),'err','먼저 2번 도시코드 찾기.'); return; }
+  setStatus($('stopStatus'),'wait','조회 중...'); $('stopRaw').classList.remove('show'); $('stopList').innerHTML='';
   try {
-    const items = await callApi('BusSttnInfoInqireService/getCrdntPrxmtSttnList', {
-      gpsLati: $('lat').value.trim(),
-      gpsLong: $('lng').value.trim(),
-      numOfRows: 12
-    }, '근처정류소');
-    if(!items.length){ setStatus($('stopStatus'), 'err', '근처 정류소 0건. 좌표 확인.'); return; }
-    setStatus($('stopStatus'), 'ok', '✅ ' + items.length + '개 정류소. 하나 탭하면 도착정보 조회.');
+    const {items, raw} = await callApi('BusSttnInfoInqireService/getCrdntPrxmtSttnList',
+      { gpsLati:$('lat').value.trim(), gpsLong:$('lng').value.trim(), numOfRows:12 }, '정류소정보');
+    showRaw($('stopRaw'), raw);
+    if(!items.length){ setStatus($('stopStatus'),'err','근처 정류소 0건. 좌표 확인.'); return; }
+    setStatus($('stopStatus'),'ok','✅ '+items.length+'개. 탭하면 도착정보 조회.');
     $('stopList').innerHTML = items.map(s =>
-      '<div class="stop" data-node="' + s.nodeid + '" data-nm="' + (s.nodenm||'') + '">' +
-        '<div class="nm">' + (s.nodenm||'(이름없음)') + '</div>' +
-        '<div class="meta">ID: ' + s.nodeid + ' · ' + (s.gpsLati||'?') + ', ' + (s.gpsLong||'?') + '</div>' +
-      '</div>'
-    ).join('');
-    document.querySelectorAll('.stop').forEach(el => {
-      el.onclick = () => selectStop(el.dataset.node, el.dataset.nm);
-    });
-  } catch(e){ setStatus($('stopStatus'), 'err', '❌ ' + e.message); }
+      '<div class="stop" data-node="'+s.nodeid+'" data-nm="'+(s.nodenm||'')+'">'+
+      '<div class="nm">'+(s.nodenm||'(무명)')+'</div>'+
+      '<div class="meta">ID: '+s.nodeid+' · '+(s.gpsLati||'?')+', '+(s.gpsLong||'?')+'</div></div>').join('');
+    document.querySelectorAll('.stop').forEach(el=>{
+      el.onclick=()=>{ $('mNode').value=el.dataset.node; queryArr(el.dataset.node, el.dataset.nm); }; });
+  } catch(e){ setStatus($('stopStatus'),'err','❌ '+e.message); if(e.raw) showRaw($('stopRaw'), e.raw); }
 };
 
-// 4. 도착정보
-async function selectStop(nodeId, nodeNm){
-  SELECTED_STOP = { nodeId, nodeNm };
-  setStatus($('arrStatus'), 'wait', '"' + nodeNm + '" 도착정보 조회 중...');
-  $('arrList').innerHTML = '';
+$('btnArr').onclick = () => {
+  const c=$('mCity').value.trim(), n=$('mNode').value.trim();
+  if(!c||!n){ setStatus($('arrStatus'),'err','cityCode와 nodeId 둘 다 입력.'); return; }
+  CITY=c; queryArr(n, '(수동)');
+};
+
+async function queryArr(nodeId, nodeNm){
+  const c=$('mCity').value.trim()||CITY;
+  setStatus($('arrStatus'),'wait','"'+nodeNm+'" 도착정보 조회 중...'); $('arrRaw').classList.remove('show'); $('arrList').innerHTML='';
   try {
-    const items = await callApi('ArvlInfoInqireService/getSttnAcctoArvlPrearngeInfoList', {
-      cityCode: CITY, nodeId: nodeId, numOfRows: 30
-    }, '도착정보');
-
-    if(!items.length){
-      setStatus($('arrStatus'), 'err', '❌ 도착정보 0건 — 이 정류소는 지금 예정 버스가 없거나, 거제 BIS가 TAGO에 도착예측을 안 넘김.');
-      return;
-    }
-
-    const has10 = items.some(x => String(x.routeno) === '10');
-    const hasArr = items.some(x => x.arrtime && Number(x.arrtime) > 0);
-
-    let verdict;
-    if(hasArr && has10) verdict = ['ok', '🎉 성공! 10번 + arrtime 둘 다 정상. 앱 만들 각 나옴.'];
-    else if(hasArr && !has10) verdict = ['wait', '⚠️ arrtime은 나오는데 이 정류소엔 10번이 없음. 10번 지나는 정류소로 재시도.'];
-    else if(!hasArr) verdict = ['err', '❌ 도착정보는 오는데 arrtime이 비었음 — 거제 BIS가 예측시간 미제공. 방향 재검토 필요.'];
-    setStatus($('arrStatus'), verdict[0], verdict[1]);
-
-    // 10번 먼저 정렬
-    items.sort((a,b) => (String(b.routeno)==='10') - (String(a.routeno)==='10'));
-
-    $('arrList').innerHTML = items.map(a => {
-      const is10 = String(a.routeno) === '10';
-      const sec = Number(a.arrtime);
-      const timeTxt = sec > 0
-        ? '<span class="time">약 ' + Math.floor(sec/60) + '분 ' + (sec%60) + '초 (' + sec + 's)</span>'
-        : '<span class="time none">arrtime 없음/0</span>';
-      return '<div class="arr' + (is10 ? ' hit' : '') + '">' +
-        '<div class="route">' + (a.routeno||'?') + '번' + (is10 ? '<span class="tag">타겟</span>' : '') + '</div>' +
-        timeTxt +
-        '<div class="cnt">' + (a.arrprevstationcnt!=null ? a.arrprevstationcnt + '번째 전' : '') +
-          (a.routetp ? ' · ' + a.routetp : '') + '</div>' +
-      '</div>';
+    const {items, raw} = await callApi('ArvlInfoInqireService/getSttnAcctoArvlPrearngeInfoList',
+      { cityCode:c, nodeId:nodeId, numOfRows:30 }, '도착정보');
+    showRaw($('arrRaw'), raw);
+    if(!items.length){ setStatus($('arrStatus'),'err','❌ 도착정보 0건 — 지금 예정버스 없거나 거제 BIS가 예측 미제공.'); return; }
+    const has10 = items.some(x=>String(x.routeno)==='10');
+    const hasArr = items.some(x=>x.arrtime && Number(x.arrtime)>0);
+    let v;
+    if(hasArr&&has10) v=['ok','🎉 성공! 10번 + arrtime 정상. 앱 각 나옴.'];
+    else if(hasArr&&!has10) v=['wait','⚠️ arrtime은 옴. 근데 이 정류소엔 10번 없음. 10번 지나는 정류소로.'];
+    else v=['err','❌ 도착정보는 오는데 arrtime 비었음 — 거제 예측 미제공. 방향 재검토.'];
+    setStatus($('arrStatus'),v[0],v[1]);
+    items.sort((a,b)=>(String(b.routeno)==='10')-(String(a.routeno)==='10'));
+    $('arrList').innerHTML = items.map(a=>{
+      const is10=String(a.routeno)==='10', sec=Number(a.arrtime);
+      const t = sec>0 ? '<span class="time">약 '+Math.floor(sec/60)+'분 '+(sec%60)+'초 ('+sec+'s)</span>'
+                      : '<span class="time none">arrtime 없음/0</span>';
+      return '<div class="arr'+(is10?' hit':'')+'"><div class="route">'+(a.routeno||'?')+'번'+
+        (is10?'<span class="tag">타겟</span>':'')+'</div>'+t+
+        '<div class="cnt">'+(a.arrprevstationcnt!=null?a.arrprevstationcnt+'번째 전':'')+
+        (a.routetp?' · '+a.routetp:'')+'</div></div>';
     }).join('');
-
-  } catch(e){ setStatus($('arrStatus'), 'err', '❌ ' + e.message); }
+  } catch(e){ setStatus($('arrStatus'),'err','❌ '+e.message); if(e.raw) showRaw($('arrRaw'), e.raw); }
 }
 </script>
 </body>
