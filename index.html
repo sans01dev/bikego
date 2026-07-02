@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>톡방 대화 분석하기 v1.6</title>
+<title>톡방 대화 분석하기 v1.7</title>
 <style>
   :root{
     --coral:#F2664C; --coral-weak:#FFEDE8; --coral-press:#D9503A;
@@ -492,7 +492,7 @@
         <textarea id="pasteArea" placeholder="톡 대화 내용을 여기에 붙여넣으세요"></textarea>
         <button onclick="analyzePaste()">분석하기</button>
       </div>
-      <div class="privacy">🔒 업로드한 대화는 이 기기에서만 분석되며<br>어디에도 저장·전송되지 않습니다. <span style="opacity:.85">(익명 사용자 수만 집계)</span><br><span style="opacity:.85">※ 카카오(주)·카카오톡과 무관한 비공식 앱입니다.</span></div>
+      <div class="privacy">🔒 업로드한 대화는 이 기기에서만 분석되며<br>어디에도 저장·전송되지 않습니다. <span style="opacity:.85">(익명 분석자 수만 집계)</span><br><span style="opacity:.85">※ 카카오(주)·카카오톡과 무관한 비공식 앱입니다.</span></div>
     </div>
   </div>
 
@@ -625,8 +625,8 @@
   /* ── 모드 설정 (solo=일대일 / group=단톡방) ── */
   let MODE='group';
   const APPCFG = {
-    group:{ kw:'우리 단톡방 통계', badge:'👥 단톡방 통계', h1:'우리 단톡방<br><b>순위·통계 보기</b>', badgeTitle:'🏆 단톡방 배지', rankTitle:'참여자 메시지 랭킹', cardT1:'우리 단톡방 ', cardT2:'통계', cardRank:'참여자 랭킹', footer:'우리 단톡방 통계', countApi:'https://talkreport-counter.san0231ai.workers.dev', flag:'dantalk_counted' },
-    solo:{ kw:'톡 대화 분석', badge:'💬 톡 대화 분석', h1:'우리 둘의 톡<br><b>순위·통계 보기</b>', badgeTitle:'🏆 대화 배지', rankTitle:'메시지 비율', cardT1:'카톡 대화 ', cardT2:'분석', cardRank:'메시지 비율', footer:'카톡 대화 분석', countApi:'https://talkreport-counter.san0231ai.workers.dev', flag:'talkreport_counted' },
+    group:{ kw:'우리 단톡방 통계', badge:'👥 단톡방 통계', h1:'우리 단톡방<br><b>순위·통계 보기</b>', badgeTitle:'🏆 단톡방 배지', rankTitle:'참여자 메시지 랭킹', cardT1:'우리 단톡방 ', cardT2:'통계', cardRank:'참여자 랭킹', footer:'우리 단톡방 통계', countApi:'https://talkreport-counter.san0231ai.workers.dev', flag:'talkall_counted' },
+    solo:{ kw:'톡 대화 분석', badge:'💬 톡 대화 분석', h1:'우리 둘의 톡<br><b>순위·통계 보기</b>', badgeTitle:'🏆 대화 배지', rankTitle:'메시지 비율', cardT1:'카톡 대화 ', cardT2:'분석', cardRank:'메시지 비율', footer:'카톡 대화 분석', countApi:'https://talkreport-counter.san0231ai.workers.dev', flag:'talkall_counted' },
   };
   function CFG(){ return APPCFG[MODE]; }
   function enterApp(mode){
@@ -830,7 +830,7 @@
       whoLabel, topWords:a.topWords, topEmojis:a.topEmojis, participants:rankArr, months:a.byMonth, gap:gapTxt };
     document.getElementById('intro').style.display='none';
     document.getElementById('report').classList.add('show');
-    hitCount();
+    hitCount(a);
     window.scrollTo(0,0);
   }
 
@@ -1195,7 +1195,7 @@
     if(sApi && gApi && sApi===gApi){ total=await readCount(sApi); }
     else{ const [a,b]=await Promise.all([readCount(sApi), readCount(gApi)]); total=a+b; }
     const el=document.getElementById('homeCount');
-    if(el && total>0){ el.innerHTML=`🔥 <b>${total.toLocaleString()}</b>명 사용`; el.classList.add('show'); }
+    if(el && total>0){ el.innerHTML=`🔥 <b>${total.toLocaleString()}</b>명 분석`; el.classList.add('show'); }
   }
   /* 앱 모티브(말풍선) SVG 워터마크 흩뿌리기 */
   function paintWatermarks(){
@@ -1206,11 +1206,25 @@
     const h=document.querySelector('#home .wm-layer'); if(h && !h.childNodes.length) h.innerHTML=homeSpots.map(a=>mk(a[0],a[1],a[2],a[3])).join('');
     const i=document.querySelector('#intro .wm-layer'); if(i && !i.childNodes.length) i.innerHTML=introSpots.map(a=>mk(a[0],a[1],a[2],a[3])).join('');
   }
-  async function hitCount(){
+  // 채팅방 지문 (참여자+메시지수+기간 → 같은 방이면 같은 값)
+  function chatFingerprint(a){
+    try{
+      var base=(a.people||[]).slice().sort().join('|')+'#'+a.total+'#'+(a.range||'');
+      var hh=0; for(var i=0;i<base.length;i++){ hh=((hh<<5)-hh+base.charCodeAt(i))|0; }
+      return 'c'+(hh>>>0).toString(36);
+    }catch(e){ return null; }
+  }
+  async function hitCount(a){
     const c=CFG(); if(!c.countApi) return;
-    let first=true; try{ first=!localStorage.getItem(c.flag); }catch(e){}
-    if(!first) return;
-    try{ await fetch(c.countApi.replace(/\/$/,'')+'/hit', {method:'GET'}); localStorage.setItem(c.flag,'1'); }catch(e){}
+    // 채팅방별 1회: 이미 분석한 방이면 skip
+    var fp=chatFingerprint(a); if(!fp) return;
+    var key='talkall_seen_chats';
+    var seen={}; try{ seen=JSON.parse(localStorage.getItem(key)||'{}'); }catch(e){}
+    if(seen[fp]) return;                 // 이미 센 채팅방
+    try{
+      await fetch(c.countApi.replace(/\/$/,'')+'/hit', {method:'GET'});
+      seen[fp]=1; try{ localStorage.setItem(key,JSON.stringify(seen)); }catch(e){}
+    }catch(e){}
   }
   paintWatermarks();
   loadHomeCount();
