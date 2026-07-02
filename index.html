@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>우리들의 카톡 대화 분석하기 v1.0</title>
+<title>우리들의 카톡 대화 분석하기 v1.4</title>
 <style>
   :root{
     --coral:#F2664C; --coral-weak:#FFEDE8; --coral-press:#D9503A;
@@ -23,7 +23,7 @@
   .app{max-width:440px; margin:0 auto; min-height:100vh; background:var(--bg); position:relative;}
 
   /* ===== 인트로 ===== */
-  .intro{padding:0 22px 30px; min-height:100vh; display:flex; flex-direction:column; justify-content:center;}
+  .intro{position:relative; padding:0 22px 30px; min-height:100vh; display:flex; flex-direction:column; justify-content:center;}
   .intro-hero{padding:0 0 24px; text-align:center;}
   .badge{display:inline-block; background:var(--coral-weak); color:var(--coral); font-size:13px; font-weight:800; padding:7px 14px; border-radius:20px; margin-bottom:16px;}
   .intro h1{font-size:28px; font-weight:800; letter-spacing:-.8px; line-height:1.32;}
@@ -55,12 +55,15 @@
   .privacy{text-align:center; margin-top:16px; font-size:12px; color:var(--text3); line-height:1.5;}
 
   /* ── 최상위 홈 ── */
-  .home{ display:flex; flex-direction:column; justify-content:center; min-height:100vh; padding:24px 22px; box-sizing:border-box; }
-  .home-inner{ width:100%; max-width:440px; margin:0 auto; }
-  .home-count{ display:none; text-align:center; font-size:14px; font-weight:700; color:var(--text2); margin-bottom:18px; }
+  .home{ position:relative; display:flex; flex-direction:column; justify-content:center; min-height:100vh; padding:24px 22px; box-sizing:border-box; }
+  .home-inner{ position:relative; z-index:1; width:100%; max-width:440px; margin:-3vh auto 0; }
+  .wm-layer{ position:absolute; inset:0; overflow:hidden; z-index:0; pointer-events:none; }
+  .wm-layer svg{ position:absolute; fill:var(--ink); opacity:.05; }
+  .intro .intro-hero, .intro .cta-area, .intro .paste-sheet{ position:relative; z-index:1; }
+  .home-count{ display:none; text-align:center; font-size:12px; font-weight:700; color:var(--text2); margin:2px 0 16px; }
   .home-count.show{ display:block; }
   .home-count b{ color:var(--coral); }
-  .home-title{ font-size:30px; font-weight:800; line-height:1.25; letter-spacing:-.5px; color:var(--ink); text-align:center; margin:0 0 6px; }
+  .home-title{ font-size:30px; font-weight:800; line-height:1.25; letter-spacing:-.5px; color:var(--ink); text-align:center; margin:0 0 8px; }
   .home-title b{ color:var(--coral); }
   .home-sub{ text-align:center; font-size:14px; font-weight:600; color:var(--text3); margin:0 0 26px; }
   .home-btn{ display:flex; align-items:center; gap:14px; width:100%; box-sizing:border-box; background:var(--card); border:2.5px solid var(--ink); box-shadow:4px 4px 0 var(--ink); border-radius:18px; padding:18px; margin-bottom:16px; font-family:inherit; cursor:pointer; text-align:left; }
@@ -374,6 +377,17 @@
   .mk-fic{ width:34px !important; height:34px !important; }
   .mk-up{ padding:5px 0 !important; } .mk-up .ic{ font-size:34px !important; } .mk-up .t{ font-size:13px !important; margin-top:4px !important; }
   .mk-hint{ font-size:10.5px !important; margin-top:6px !important; }
+  /* 카톡 예시 카드 높이 ~10% 축소 (세로 여백만, 글자 크기 유지) */
+  .mock{ padding-top:6px !important; padding-bottom:6px !important; }
+  .mk-bar{ padding-top:3px !important; padding-bottom:3px !important; margin-bottom:2px !important; }
+  .mk-row{ padding-top:3px !important; padding-bottom:3px !important; }
+  .mk-item{ padding-top:6px !important; padding-bottom:6px !important; }
+  .mk-opt{ padding-top:6px !important; padding-bottom:6px !important; }
+  .mk-sec{ padding-top:2px !important; padding-bottom:4px !important; }
+  .mk-file{ padding-top:5px !important; padding-bottom:5px !important; margin-bottom:3px !important; }
+  .mk-up{ padding-top:3px !important; padding-bottom:3px !important; }
+  .mk-hint{ margin-top:4px !important; }
+  .mk-l2{ margin-top:4px !important; }
   .mk-ham{ font-size:17px !important; }
   /* ── ② 비대칭 스팬 대시보드 (리포트) ── */
   .report{ background:#F6EFDD !important; min-height:100vh; }
@@ -440,9 +454,10 @@
   <!-- ===== 인트로 ===== -->
   <!-- ===== 최상위 홈 (선택) ===== -->
   <div class="home" id="home">
+    <div class="wm-layer" aria-hidden="true"></div>
     <div class="home-inner">
-      <div class="home-count" id="homeCount"></div>
       <h1 class="home-title">우리들의<br><b>카톡 대화 분석하기</b></h1>
+      <div class="home-count" id="homeCount"></div>
       <p class="home-sub">분석할 대화를 선택하세요</p>
       <button class="home-btn" onclick="enterApp('solo')">
         <span class="hb-emoji">💬</span>
@@ -459,6 +474,7 @@
   </div>
 
   <div class="intro" id="intro" style="display:none">
+    <div class="wm-layer" aria-hidden="true"></div>
     <button class="home-back" onclick="backHome()">← 홈</button>
     <div class="intro-hero">
       <div class="badge" id="introBadge">👥 단톡방 통계</div>
@@ -1164,12 +1180,22 @@
     const total=a+b, el=document.getElementById('homeCount');
     if(el && total>0){ el.innerHTML=`🔥 <b>${total.toLocaleString()}</b>명 사용`; el.classList.add('show'); }
   }
+  /* 앱 모티브(말풍선) SVG 워터마크 흩뿌리기 */
+  function paintWatermarks(){
+    const bubble='<path d="M6 4h12a3 3 0 0 1 3 3v7a3 3 0 0 1-3 3h-5l-5 4v-4H6a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3z"/>';
+    const homeSpots=[[8,8,84,-14],[16,74,56,12],[40,-3,118,8],[52,80,96,-10],[74,5,70,16],[84,66,86,-8],[92,38,54,6]];
+    const introSpots=[[10,6,70,-12],[24,80,56,10],[52,-4,110,7],[64,82,90,-9],[86,9,68,14],[90,60,78,-6]];
+    const mk=(t,l,w,r)=>`<svg viewBox="0 0 24 24" style="top:${t}%;left:${l}%;width:${w}px;height:${w}px;transform:rotate(${r}deg)">${bubble}</svg>`;
+    const h=document.querySelector('#home .wm-layer'); if(h && !h.childNodes.length) h.innerHTML=homeSpots.map(a=>mk(a[0],a[1],a[2],a[3])).join('');
+    const i=document.querySelector('#intro .wm-layer'); if(i && !i.childNodes.length) i.innerHTML=introSpots.map(a=>mk(a[0],a[1],a[2],a[3])).join('');
+  }
   async function hitCount(){
     const c=CFG(); if(!c.countApi) return;
     let first=true; try{ first=!localStorage.getItem(c.flag); }catch(e){}
     if(!first) return;
     try{ await fetch(c.countApi.replace(/\/$/,'')+'/hit', {method:'GET'}); localStorage.setItem(c.flag,'1'); }catch(e){}
   }
+  paintWatermarks();
   loadHomeCount();
 </script>
 </body>
