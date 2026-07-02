@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>우리들의 카톡 대화 분석하기 v1.4</title>
+<title>톡방 대화 분석하기 v1.6</title>
 <style>
   :root{
     --coral:#F2664C; --coral-weak:#FFEDE8; --coral-press:#D9503A;
@@ -104,7 +104,7 @@
   .g-next:active{background:var(--coral-press);}
   .g-paste{text-align:center; margin-top:12px; color:var(--text3); font-size:13px; font-weight:600; cursor:pointer;}
 
-  /* 목업 (카톡 화면 흉내) */
+  /* 목업 (톡 화면 흉내) */
   .mock{background:var(--card); border-radius:18px; box-shadow:var(--shadow); padding:16px 14px; margin:4px 0; border:1px solid var(--line);}
   .mk-bar{display:flex; align-items:center; justify-content:space-between; padding:8px 12px; border-bottom:1px solid var(--line); font-size:14px; color:var(--text2); margin-bottom:6px;}
   .mk-bar .tt{font-weight:700; color:var(--text);}
@@ -377,7 +377,7 @@
   .mk-fic{ width:34px !important; height:34px !important; }
   .mk-up{ padding:5px 0 !important; } .mk-up .ic{ font-size:34px !important; } .mk-up .t{ font-size:13px !important; margin-top:4px !important; }
   .mk-hint{ font-size:10.5px !important; margin-top:6px !important; }
-  /* 카톡 예시 카드 높이 ~10% 축소 (세로 여백만, 글자 크기 유지) */
+  /* 톡 예시 카드 높이 ~10% 축소 (세로 여백만, 글자 크기 유지) */
   .mock{ padding-top:6px !important; padding-bottom:6px !important; }
   .mk-bar{ padding-top:3px !important; padding-bottom:3px !important; margin-bottom:2px !important; }
   .mk-row{ padding-top:3px !important; padding-bottom:3px !important; }
@@ -456,12 +456,12 @@
   <div class="home" id="home">
     <div class="wm-layer" aria-hidden="true"></div>
     <div class="home-inner">
-      <h1 class="home-title">우리들의<br><b>카톡 대화 분석하기</b></h1>
+      <h1 class="home-title">우리들의<br><b>톡방 대화 분석하기</b></h1>
       <div class="home-count" id="homeCount"></div>
       <p class="home-sub">분석할 대화를 선택하세요</p>
       <button class="home-btn" onclick="enterApp('solo')">
         <span class="hb-emoji">💬</span>
-        <span class="hb-txt"><span class="hb-t">일대일 대화</span><span class="hb-d">둘만의 카톡 분석</span></span>
+        <span class="hb-txt"><span class="hb-t">일대일 대화</span><span class="hb-d">둘만의 톡 분석</span></span>
         <span class="hb-arrow">›</span>
       </button>
       <button class="home-btn" onclick="enterApp('group')">
@@ -489,7 +489,7 @@
       <input type="file" id="chatfile" accept=".txt,text/plain" style="display:none" onchange="handleFile(this)">
       <div class="paste-link" onclick="quickUpload()">이미 대화 파일이 있어요 → 바로 올리기</div>
       <div class="paste-sheet" id="pasteSheet">
-        <textarea id="pasteArea" placeholder="카톡 대화 내용을 여기에 붙여넣으세요"></textarea>
+        <textarea id="pasteArea" placeholder="톡 대화 내용을 여기에 붙여넣으세요"></textarea>
         <button onclick="analyzePaste()">분석하기</button>
       </div>
       <div class="privacy">🔒 업로드한 대화는 이 기기에서만 분석되며<br>어디에도 저장·전송되지 않습니다. <span style="opacity:.85">(익명 사용자 수만 집계)</span><br><span style="opacity:.85">※ 카카오(주)·카카오톡과 무관한 비공식 앱입니다.</span></div>
@@ -511,7 +511,7 @@
       </div>
       <div class="g-paste" onclick="togglePaste2()">또는 텍스트 붙여넣기</div>
       <div class="paste-sheet" id="pasteSheet2" style="margin:12px 0 0;">
-        <textarea id="pasteArea2" placeholder="카톡 대화 내용을 여기에 붙여넣으세요"></textarea>
+        <textarea id="pasteArea2" placeholder="톡 대화 내용을 여기에 붙여넣으세요"></textarea>
         <button onclick="analyzePaste2()">분석하기</button>
       </div>
     </div>
@@ -625,8 +625,8 @@
   /* ── 모드 설정 (solo=일대일 / group=단톡방) ── */
   let MODE='group';
   const APPCFG = {
-    group:{ kw:'우리 단톡방 통계', badge:'👥 단톡방 통계', h1:'우리 단톡방<br><b>순위·통계 보기</b>', badgeTitle:'🏆 단톡방 배지', rankTitle:'참여자 메시지 랭킹', cardT1:'우리 단톡방 ', cardT2:'통계', cardRank:'참여자 랭킹', footer:'우리 단톡방 통계', countApi:'', flag:'dantalk_counted' },
-    solo:{ kw:'카톡 대화 분석', badge:'💬 카톡 대화 분석', h1:'우리 둘의 카톡<br><b>순위·통계 보기</b>', badgeTitle:'🏆 대화 배지', rankTitle:'메시지 비율', cardT1:'카톡 대화 ', cardT2:'분석', cardRank:'메시지 비율', footer:'카톡 대화 분석', countApi:'https://talkreport-counter.san0231ai.workers.dev', flag:'talkreport_counted' },
+    group:{ kw:'우리 단톡방 통계', badge:'👥 단톡방 통계', h1:'우리 단톡방<br><b>순위·통계 보기</b>', badgeTitle:'🏆 단톡방 배지', rankTitle:'참여자 메시지 랭킹', cardT1:'우리 단톡방 ', cardT2:'통계', cardRank:'참여자 랭킹', footer:'우리 단톡방 통계', countApi:'https://talkreport-counter.san0231ai.workers.dev', flag:'dantalk_counted' },
+    solo:{ kw:'톡 대화 분석', badge:'💬 톡 대화 분석', h1:'우리 둘의 톡<br><b>순위·통계 보기</b>', badgeTitle:'🏆 대화 배지', rankTitle:'메시지 비율', cardT1:'카톡 대화 ', cardT2:'분석', cardRank:'메시지 비율', footer:'카톡 대화 분석', countApi:'https://talkreport-counter.san0231ai.workers.dev', flag:'talkreport_counted' },
   };
   function CFG(){ return APPCFG[MODE]; }
   function enterApp(mode){
@@ -860,7 +860,7 @@
     setTimeout(()=>{
       try{
         const msgs=parseKakao(raw);
-        if(msgs.length<2){showLoading(false); toast('대화를 인식하지 못했어요. 카톡 내보내기 파일이 맞는지 확인해주세요'); return;}
+        if(msgs.length<2){showLoading(false); toast('대화를 인식하지 못했어요. 톡 내보내기 파일이 맞는지 확인해주세요'); return;}
         const a=analyze(msgs);
         closeGuide();
         render(a);
@@ -881,7 +881,7 @@
   /* ── 단계별 가이드 ── */
   const GUIDE=[
     {title:'분석할 <b>채팅방</b>을 열어요',
-     desc:'카톡에서 요약하고 싶은 채팅방(가족·친구·연인 등)을 열어주세요.',
+     desc:'톡에서 요약하고 싶은 채팅방(가족·친구·연인 등)을 열어주세요.',
      mock:`<div class="mock">
         <div class="mk-bar"><span>‹</span><span class="tt">채팅방 목록</span><span></span></div>
         <div class="mk-row hi-ring"><div class="mk-av c"></div><div class="mk-ln"><div class="mk-l1"></div><div class="mk-l2"></div></div></div>
@@ -1109,7 +1109,20 @@
 
     // 푸터
     x.fillStyle=MUTY; x.font=`700 28px ${KF}`; x.textAlign='center';
-    x.fillText('🔒 기기 안에서만 분석 · '+CFG().footer, W/2, H-52);
+    x.fillText('🔒 기기 안에서만 분석 · '+CFG().footer, W/2, H-78);
+    // 저작권 (도용 방지 · sans는 연하게)
+    x.textAlign='center';
+    var cpMain='© 톡방 대화 분석하기', cpSub='  sans';
+    x.font=`800 24px ${KF}`;
+    var wMain=x.measureText(cpMain).width;
+    x.font=`600 24px ${KF}`;
+    var wSub=x.measureText(cpSub).width;
+    var cpX=W/2-(wMain+wSub)/2;
+    x.textAlign='left';
+    x.fillStyle='rgba(20,20,20,.55)'; x.font=`800 24px ${KF}`;
+    x.fillText(cpMain, cpX, H-44);
+    x.fillStyle='rgba(20,20,20,.28)'; x.font=`600 24px ${KF}`;
+    x.fillText(cpSub, cpX+wMain, H-44);
     x.textAlign='left';
     return cv.toDataURL('image/png');
   }
@@ -1176,8 +1189,12 @@
     catch(e){ return 0; }
   }
   async function loadHomeCount(){
-    const [a,b]=await Promise.all([readCount(APPCFG.solo.countApi), readCount(APPCFG.group.countApi)]);
-    const total=a+b, el=document.getElementById('homeCount');
+    // solo/group이 같은 카운터 서버면 한 번만 읽어 2배 방지, 다르면 각각 더함
+    const sApi=APPCFG.solo.countApi, gApi=APPCFG.group.countApi;
+    let total=0;
+    if(sApi && gApi && sApi===gApi){ total=await readCount(sApi); }
+    else{ const [a,b]=await Promise.all([readCount(sApi), readCount(gApi)]); total=a+b; }
+    const el=document.getElementById('homeCount');
     if(el && total>0){ el.innerHTML=`🔥 <b>${total.toLocaleString()}</b>명 사용`; el.classList.add('show'); }
   }
   /* 앱 모티브(말풍선) SVG 워터마크 흩뿌리기 */
